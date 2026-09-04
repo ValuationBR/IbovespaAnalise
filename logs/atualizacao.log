@@ -1,0 +1,208 @@
+[2026-08-30 15:41:41] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-08-30 15:41:41] Iniciando etapa: Coleta de dados (brapi.dev)
+[2026-08-30 15:45:18] Etapa concluída: Coleta de dados (brapi.dev)
+[2026-08-30 15:45:18] Iniciando etapa: Cálculo de indicadores
+[2026-08-30 15:45:18] Etapa concluída: Cálculo de indicadores
+[2026-08-30 15:45:18] Iniciando etapa: Valuation (Graham/Bazin/DCF)
+[2026-08-30 15:45:18] Etapa concluída: Valuation (Graham/Bazin/DCF)
+[2026-08-30 15:45:18] Iniciando etapa: Geração do Excel
+[2026-08-30 15:45:20] Etapa concluída: Geração do Excel
+[2026-08-30 15:45:20] ===== ATUALIZAÇÃO CONCLUÍDA COM SUCESSO =====
+[2026-08-30 15:46:10] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-08-30 15:46:10] Iniciando etapa: Coleta de dados (brapi.dev)
+[2026-08-30 15:49:23] Etapa concluída: Coleta de dados (brapi.dev)
+[2026-08-30 15:49:23] Iniciando etapa: Cálculo de indicadores
+[2026-08-30 15:49:24] Etapa concluída: Cálculo de indicadores
+[2026-08-30 15:49:24] Iniciando etapa: Valuation (Graham/Bazin/DCF)
+[2026-08-30 15:49:24] Etapa concluída: Valuation (Graham/Bazin/DCF)
+[2026-08-30 15:49:24] Iniciando etapa: Geração do Excel
+[2026-08-30 15:49:25] Etapa concluída: Geração do Excel
+[2026-08-30 15:49:25] ===== ATUALIZAÇÃO CONCLUÍDA COM SUCESSO =====
+[2026-08-30 15:55:27] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-08-30 15:55:27] Iniciando etapa: Coleta de dados (brapi.dev)
+[2026-08-30 15:57:47] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-08-30 15:57:47] Iniciando etapa: Coleta de dados (brapi.dev)
+[2026-08-30 15:59:52] Etapa concluída: Coleta de dados (brapi.dev)
+[2026-08-30 15:59:52] Iniciando etapa: Cálculo de indicadores
+[2026-08-30 15:59:52] Etapa concluída: Cálculo de indicadores
+[2026-08-30 15:59:52] Iniciando etapa: Valuation (Graham/Bazin/DCF)
+[2026-08-30 15:59:53] Etapa concluída: Valuation (Graham/Bazin/DCF)
+[2026-08-30 15:59:53] Iniciando etapa: Geração do Excel
+[2026-08-30 15:59:54] Etapa concluída: Geração do Excel
+[2026-08-30 15:59:54] ===== ATUALIZAÇÃO CONCLUÍDA COM SUCESSO =====
+[2026-08-30 16:13:07] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-08-30 16:13:07] Iniciando etapa: Coleta de preço/dividendos/CNPJ (brapi.dev)
+[2026-08-30 16:15:14] Etapa concluída: Coleta de preço/dividendos/CNPJ (brapi.dev)
+[2026-08-30 16:15:14] Iniciando etapa: Download dos dados da CVM
+[2026-08-30 16:23:15] Etapa concluída: Download dos dados da CVM
+[2026-08-30 16:23:15] Iniciando etapa: Processamento do DRE/Balanço (CVM)
+[2026-08-30 16:25:29] Etapa concluída: Processamento do DRE/Balanço (CVM)
+[2026-08-30 16:25:29] Iniciando etapa: Cálculo de indicadores
+[2026-08-30 16:25:38] Etapa concluída: Cálculo de indicadores
+[2026-08-30 16:25:38] Iniciando etapa: Valuation (Graham/Bazin/DCF)
+[2026-08-30 16:25:38] Etapa concluída: Valuation (Graham/Bazin/DCF)
+[2026-08-30 16:25:38] Iniciando etapa: Geração do Excel
+[2026-08-30 16:25:39] ERRO na etapa Geração do Excel:
+Traceback (most recent call last):
+  File "C:\IbovespaAnalise\atualizar_tudo.py", line 40, in rodar_etapa
+    funcao()
+    ~~~~~~^^
+  File "C:\IbovespaAnalise\gerar_excel.py", line 249, in main
+    aba_empresa(wb, cur, row["ticker"], row["nome"])
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\IbovespaAnalise\gerar_excel.py", line 228, in aba_empresa
+    upside = (preco / preco_atual) - 1
+              ~~~~~~^~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for /: 'decimal.Decimal' and 'float'
+
+[2026-08-30 16:25:39] ===== ATUALIZAÇÃO CONCLUÍDA COM ERROS — veja acima quais etapas falharam =====
+[2026-08-30 20:48:36] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-08-30 20:48:36] Iniciando etapa: Coleta de preço/market cap/CNPJ (brapi.dev)
+[2026-08-30 20:50:38] Etapa concluída: Coleta de preço/market cap/CNPJ (brapi.dev)
+[2026-08-30 20:50:38] Iniciando etapa: Coleta de dividendos (site da B3)
+[2026-08-30 20:52:09] Etapa concluída: Coleta de dividendos (site da B3)
+[2026-08-30 20:52:09] Iniciando etapa: Download dos dados da CVM
+[2026-08-30 20:52:44] Etapa concluída: Download dos dados da CVM
+[2026-08-30 20:52:44] Iniciando etapa: Processamento do DRE/Balanço (CVM)
+[2026-08-30 21:06:23] Etapa concluída: Processamento do DRE/Balanço (CVM)
+[2026-08-30 21:06:23] Iniciando etapa: Cálculo de indicadores
+[2026-08-30 21:06:24] Etapa concluída: Cálculo de indicadores
+[2026-08-30 21:06:24] Iniciando etapa: Valuation (Graham/Bazin/DCF)
+[2026-08-30 21:06:24] Etapa concluída: Valuation (Graham/Bazin/DCF)
+[2026-08-30 21:06:24] Iniciando etapa: Geração do Excel
+[2026-08-30 21:06:25] ERRO na etapa Geração do Excel:
+Traceback (most recent call last):
+  File "C:\IbovespaAnalise\atualizar_tudo.py", line 42, in rodar_etapa
+    funcao()
+    ~~~~~~^^
+  File "C:\IbovespaAnalise\gerar_excel.py", line 249, in main
+    aba_empresa(wb, cur, row["ticker"], row["nome"])
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\IbovespaAnalise\gerar_excel.py", line 228, in aba_empresa
+    upside = (preco / preco_atual) - 1
+              ~~~~~~^~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for /: 'decimal.Decimal' and 'float'
+
+[2026-08-30 21:06:25] ===== ATUALIZAÇÃO CONCLUÍDA COM ERROS — veja acima quais etapas falharam =====
+[2026-08-30 21:15:25] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-08-30 21:15:25] Iniciando etapa: Coleta de preço/market cap/CNPJ (brapi.dev)
+[2026-08-30 21:17:27] Etapa concluída: Coleta de preço/market cap/CNPJ (brapi.dev)
+[2026-08-30 21:17:27] Iniciando etapa: Coleta de dividendos (site da B3)
+[2026-08-30 21:18:53] Etapa concluída: Coleta de dividendos (site da B3)
+[2026-08-30 21:18:53] Iniciando etapa: Download dos dados da CVM
+[2026-08-30 21:19:03] Etapa concluída: Download dos dados da CVM
+[2026-08-30 21:19:03] Iniciando etapa: Processamento do DRE/Balanço (CVM)
+[2026-08-30 21:32:27] Etapa concluída: Processamento do DRE/Balanço (CVM)
+[2026-08-30 21:32:27] Iniciando etapa: Cálculo de indicadores
+[2026-08-30 21:32:28] Etapa concluída: Cálculo de indicadores
+[2026-08-30 21:32:28] Iniciando etapa: Valuation (Graham/Bazin/DCF)
+[2026-08-30 21:32:28] Etapa concluída: Valuation (Graham/Bazin/DCF)
+[2026-08-30 21:32:28] Iniciando etapa: Geração do Excel
+[2026-08-30 21:32:30] Etapa concluída: Geração do Excel
+[2026-08-30 21:32:30] ===== ATUALIZAÇÃO CONCLUÍDA COM SUCESSO =====
+[2026-08-31 08:42:21] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-08-31 08:42:21] Iniciando etapa: Coleta de preço/market cap/CNPJ/setor (brapi.dev)
+[2026-08-31 08:44:34] Etapa concluída: Coleta de preço/market cap/CNPJ/setor (brapi.dev)
+[2026-08-31 08:44:34] Iniciando etapa: Seleção das 40 maiores por valor de mercado
+[2026-08-31 08:44:35] Etapa concluída: Seleção das 40 maiores por valor de mercado
+[2026-08-31 08:44:35] Iniciando etapa: Coleta de dividendos (site da B3)
+[2026-08-31 08:45:15] Etapa concluída: Coleta de dividendos (site da B3)
+[2026-08-31 08:45:15] Iniciando etapa: Download dos dados da CVM
+[2026-08-31 08:47:19] Etapa concluída: Download dos dados da CVM
+[2026-08-31 08:47:19] Iniciando etapa: Processamento do DRE/Balanço (CVM)
+[2026-08-31 08:56:15] Etapa concluída: Processamento do DRE/Balanço (CVM)
+[2026-08-31 08:56:15] Iniciando etapa: Cálculo de indicadores
+[2026-08-31 08:56:15] Etapa concluída: Cálculo de indicadores
+[2026-08-31 08:56:15] Iniciando etapa: Valuation (Graham/Bazin/DCF)
+[2026-08-31 08:56:15] Etapa concluída: Valuation (Graham/Bazin/DCF)
+[2026-08-31 08:56:15] Iniciando etapa: Geração dos comentários automáticos
+[2026-08-31 08:56:16] Etapa concluída: Geração dos comentários automáticos
+[2026-08-31 08:56:16] Iniciando etapa: Geração do Excel
+[2026-08-31 08:56:17] Etapa concluída: Geração do Excel
+[2026-08-31 08:56:17] ===== ATUALIZAÇÃO CONCLUÍDA COM SUCESSO =====
+[2026-08-31 20:24:17] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-08-31 20:24:17] Iniciando etapa: Coleta de preço/market cap/CNPJ/setor (brapi.dev)
+[2026-08-31 20:26:29] Etapa concluída: Coleta de preço/market cap/CNPJ/setor (brapi.dev)
+[2026-08-31 20:26:29] Iniciando etapa: Seleção das 40 maiores por valor de mercado
+[2026-08-31 20:26:29] Etapa concluída: Seleção das 40 maiores por valor de mercado
+[2026-08-31 20:26:29] Iniciando etapa: Coleta de dividendos (site da B3)
+[2026-08-31 20:27:11] Etapa concluída: Coleta de dividendos (site da B3)
+[2026-08-31 20:27:11] Iniciando etapa: Download dos dados da CVM
+[2026-08-31 20:27:26] Etapa concluída: Download dos dados da CVM
+[2026-08-31 20:27:26] Iniciando etapa: Processamento do DRE/Balanço (CVM)
+[2026-08-31 20:33:54] Etapa concluída: Processamento do DRE/Balanço (CVM)
+[2026-08-31 20:33:54] Iniciando etapa: Cálculo de indicadores
+[2026-08-31 20:33:55] Etapa concluída: Cálculo de indicadores
+[2026-08-31 20:33:55] Iniciando etapa: Valuation (Graham/Bazin/DCF)
+[2026-08-31 20:33:55] Etapa concluída: Valuation (Graham/Bazin/DCF)
+[2026-08-31 20:33:55] Iniciando etapa: Geração dos comentários automáticos
+[2026-08-31 20:33:56] Etapa concluída: Geração dos comentários automáticos
+[2026-08-31 20:33:56] Iniciando etapa: Geração do Excel
+[2026-08-31 20:33:57] Etapa concluída: Geração do Excel
+[2026-08-31 20:33:57] ===== ATUALIZAÇÃO CONCLUÍDA COM SUCESSO =====
+[2026-09-02 20:57:47] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-09-02 20:57:47] Iniciando etapa: Coleta de preço/market cap/CNPJ/setor (brapi.dev)
+[2026-09-02 21:00:05] Etapa concluída: Coleta de preço/market cap/CNPJ/setor (brapi.dev)
+[2026-09-02 21:00:05] Iniciando etapa: Seleção das 40 maiores por valor de mercado
+[2026-09-02 21:00:05] Etapa concluída: Seleção das 40 maiores por valor de mercado
+[2026-09-02 21:00:05] Iniciando etapa: Coleta de dividendos (site da B3)
+[2026-09-02 21:00:47] Etapa concluída: Coleta de dividendos (site da B3)
+[2026-09-02 21:00:47] Iniciando etapa: Download dos dados da CVM
+[2026-09-02 21:01:02] Etapa concluída: Download dos dados da CVM
+[2026-09-02 21:01:02] Iniciando etapa: Processamento do DRE/Balanço (CVM)
+[2026-09-02 21:08:46] Etapa concluída: Processamento do DRE/Balanço (CVM)
+[2026-09-02 21:08:46] Iniciando etapa: Cálculo de indicadores
+[2026-09-02 21:08:47] Etapa concluída: Cálculo de indicadores
+[2026-09-02 21:08:47] Iniciando etapa: Valuation (Graham/Bazin/DCF)
+[2026-09-02 21:08:47] Etapa concluída: Valuation (Graham/Bazin/DCF)
+[2026-09-02 21:08:47] Iniciando etapa: Geração dos comentários automáticos
+[2026-09-02 21:08:47] Etapa concluída: Geração dos comentários automáticos
+[2026-09-02 21:08:47] Iniciando etapa: Coleta de notícias
+[2026-09-02 21:10:10] Etapa concluída: Coleta de notícias
+[2026-09-02 21:10:10] Iniciando etapa: Geração do Excel
+[2026-09-02 21:10:12] Etapa concluída: Geração do Excel
+[2026-09-02 21:10:12] ===== ATUALIZAÇÃO CONCLUÍDA COM SUCESSO =====
+[2026-09-03 20:00:19] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-09-03 20:00:19] Iniciando etapa: Coleta de preço/market cap/CNPJ/setor (brapi.dev)
+[2026-09-03 20:02:24] Etapa concluída: Coleta de preço/market cap/CNPJ/setor (brapi.dev)
+[2026-09-03 20:02:24] Iniciando etapa: Seleção das 40 maiores por valor de mercado
+[2026-09-03 20:02:24] Etapa concluída: Seleção das 40 maiores por valor de mercado
+[2026-09-03 20:02:25] Iniciando etapa: Coleta de dividendos (site da B3)
+[2026-09-03 20:03:06] Etapa concluída: Coleta de dividendos (site da B3)
+[2026-09-03 20:03:06] Iniciando etapa: Download dos dados da CVM
+[2026-09-03 20:03:39] Etapa concluída: Download dos dados da CVM
+[2026-09-03 20:03:39] Iniciando etapa: Processamento do DRE/Balanço (CVM)
+[2026-09-03 20:11:46] Etapa concluída: Processamento do DRE/Balanço (CVM)
+[2026-09-03 20:11:46] Iniciando etapa: Cálculo de indicadores
+[2026-09-03 20:11:46] Etapa concluída: Cálculo de indicadores
+[2026-09-03 20:11:46] Iniciando etapa: Valuation (Graham/Bazin/DCF)
+[2026-09-03 20:11:47] Etapa concluída: Valuation (Graham/Bazin/DCF)
+[2026-09-03 20:11:47] Iniciando etapa: Geração dos comentários automáticos
+[2026-09-03 20:11:47] Etapa concluída: Geração dos comentários automáticos
+[2026-09-03 20:11:47] Iniciando etapa: Coleta de notícias
+[2026-09-03 20:13:06] Etapa concluída: Coleta de notícias
+[2026-09-03 20:13:06] Iniciando etapa: Geração do Excel
+[2026-09-03 20:13:08] Etapa concluída: Geração do Excel
+[2026-09-03 20:13:08] ===== ATUALIZAÇÃO CONCLUÍDA COM SUCESSO =====
+[2026-09-04 09:35:01] ===== INÍCIO DA ATUALIZAÇÃO DIÁRIA =====
+[2026-09-04 09:35:01] Iniciando etapa: Coleta de preço/market cap/CNPJ/setor (brapi.dev)
+[2026-09-04 09:51:20] Etapa concluída: Coleta de preço/market cap/CNPJ/setor (brapi.dev)
+[2026-09-04 09:51:20] Iniciando etapa: Seleção das 40 maiores por valor de mercado
+[2026-09-04 09:51:22] Etapa concluída: Seleção das 40 maiores por valor de mercado
+[2026-09-04 09:51:22] Iniciando etapa: Coleta de dividendos (site da B3)
+[2026-09-04 09:52:08] Etapa concluída: Coleta de dividendos (site da B3)
+[2026-09-04 09:52:08] Iniciando etapa: Download dos dados da CVM
+[2026-09-04 09:52:47] Etapa concluída: Download dos dados da CVM
+[2026-09-04 09:52:47] Iniciando etapa: Processamento do DRE/Balanço (CVM)
+[2026-09-04 10:00:37] Etapa concluída: Processamento do DRE/Balanço (CVM)
+[2026-09-04 10:00:37] Iniciando etapa: Cálculo de indicadores
+[2026-09-04 10:01:26] Etapa concluída: Cálculo de indicadores
+[2026-09-04 10:01:26] Iniciando etapa: Valuation (Graham/Bazin/DCF)
+[2026-09-04 10:02:09] Etapa concluída: Valuation (Graham/Bazin/DCF)
+[2026-09-04 10:02:09] Iniciando etapa: Geração dos comentários automáticos
+[2026-09-04 10:02:29] Etapa concluída: Geração dos comentários automáticos
+[2026-09-04 10:02:29] Iniciando etapa: Coleta de notícias
+[2026-09-04 10:04:12] Etapa concluída: Coleta de notícias
+[2026-09-04 10:04:12] Iniciando etapa: Geração do Excel
+[2026-09-04 10:04:46] Etapa concluída: Geração do Excel
+[2026-09-04 10:04:46] ===== ATUALIZAÇÃO CONCLUÍDA COM SUCESSO =====

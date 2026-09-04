@@ -1,0 +1,6 @@
+requests
+psycopg2-binary
+openpyxl
+python-dateutil
+pandas
+jinja2

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel Ibovespa — 40 Maiores por Valor de Mercado</title>
+<style>
+:root {
+  --azul-escuro: #1f3864; --azul-claro: #eaf1fb; --verde: #1e7e34;
+  --vermelho: #b02a2a; --cinza: #6b7280; --borda: #e5e7eb; --bg: #f7f8fa;
+}
+* { box-sizing: border-box; }
+body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background: var(--bg);
+       color: #1a1a1a; margin: 0; line-height: 1.5; }
+header { background: var(--azul-escuro); color: #fff; padding: 24px 20px; }
+header h1 { margin: 0; font-size: 1.5rem; }
+header p { margin: 4px 0 0; color: #cbd8ef; font-size: 0.9rem; }
+main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 60px; }
+a { color: var(--azul-escuro); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.card { background: #fff; border: 1px solid var(--borda); border-radius: 12px; padding: 18px;
+        text-decoration: none; color: inherit; display: block; transition: box-shadow .15s, transform .15s; }
+.card:hover { box-shadow: 0 6px 16px rgba(31,56,100,.10); transform: translateY(-2px); }
+.card .top { display: flex; justify-content: space-between; align-items: baseline; }
+.card .ticker { font-weight: 700; font-size: 1.1rem; color: var(--azul-escuro); }
+.card .nome, .card .setor { color: var(--cinza); font-size: 0.82rem; margin-top: 2px; }
+.card .preco { font-size: 1.35rem; font-weight: 700; margin-top: 10px; color: #1a1a1a; }
+.card .linha-mini { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.82rem; color: var(--cinza); }
+.pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
+.pill.pos { background: #e6f4ea; color: var(--verde); }
+.pill.neg { background: #fbe9e9; color: var(--vermelho); }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; background: #fff; }
+th, td { padding: 8px 10px; border-bottom: 1px solid var(--borda); text-align: left; white-space: nowrap; }
+th { background: var(--azul-claro); color: var(--azul-escuro); position: sticky; top: 0; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--borda); border-radius: 8px; }
+.secao { margin-top: 28px; }
+.secao h2 { color: var(--azul-escuro); font-size: 1.1rem; border-bottom: 2px solid var(--azul-claro); padding-bottom: 6px; }
+.indicadores { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.indicador { background: #fff; border: 1px solid var(--borda); border-radius: 8px; padding: 10px 12px; }
+.indicador .label { font-size: 0.75rem; color: var(--cinza); }
+.indicador .valor { font-size: 1.05rem; font-weight: 700; }
+.noticia { background: #fff; border: 1px solid var(--borda); border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+.noticia .data { color: var(--cinza); font-size: 0.78rem; }
+.comentario-box { background: #fff; border-left: 4px solid var(--azul-escuro); padding: 12px 16px; border-radius: 6px; }
+footer { color: var(--cinza); font-size: 0.78rem; padding: 20px 16px 40px; max-width: 1100px; margin: 0 auto; }
+.voltar { display: inline-block; margin-bottom: 16px; font-size: 0.9rem; }
+.intro { background: #fff; border: 1px solid var(--borda); border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; }
+.intro p { margin: 0 0 8px; color: #374151; font-size: 0.92rem; }
+.intro p:last-child { margin-bottom: 0; }
+.selo { display: inline-flex; align-items: center; gap: 6px; background: var(--azul-claro); color: var(--azul-escuro);
+        font-size: 0.78rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+.feedback { background: #fff; border: 1px solid var(--borda); border-radius: 12px; padding: 20px; margin-top: 32px; text-align: center; }
+.feedback h2 { margin-top: 0; color: var(--azul-escuro); font-size: 1.05rem; }
+.feedback p { color: var(--cinza); font-size: 0.88rem; }
+.botao { display: inline-block; background: var(--azul-escuro); color: #fff; padding: 10px 20px;
+         border-radius: 8px; font-weight: 600; font-size: 0.88rem; margin-top: 6px; }
+.taxas-bcb { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0 4px; }
+.taxa-item { background: var(--azul-claro); border-radius: 8px; padding: 8px 14px; font-size: 0.85rem; }
+.taxa-item b { color: var(--azul-escuro); font-size: 1rem; }
+.taxa-item .taxa-data { color: var(--cinza); font-size: 0.72rem; display: block; }
+.ticker-tape-wrap { border-bottom: 1px solid var(--borda); background: #fff; }
+
+/* Tooltip de explicação — funciona com mouse (hover) e toque (clique) */
+.tip { position: relative; cursor: help; border-bottom: 1px dotted var(--cinza); }
+.tip::after {
+  content: attr(data-tip);
+  position: absolute; left: 0; bottom: 130%; z-index: 30;
+  background: #1a1a1a; color: #fff; padding: 10px 12px; border-radius: 8px;
+  font-size: 0.78rem; font-weight: 400; line-height: 1.45;
+  width: 260px; max-width: 75vw; box-shadow: 0 8px 22px rgba(0,0,0,.22);
+  opacity: 0; visibility: hidden; transform: translateY(4px);
+  transition: opacity .12s, transform .12s; pointer-events: none;
+}
+.tip:hover::after, .tip.show::after { opacity: 1; visibility: visible; transform: translateY(0); }
+</style></head>
+<body>
+<header><h1>Painel Ibovespa — 40 Maiores por Valor de Mercado</h1>
+<p>Atualizado em 01/09/2026</p></header>
+
+<div class="ticker-tape-wrap">
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+  {
+  "symbols": [{"proName": "BMFBOVESPA:IBOV", "title": "Ibovespa"}, {"proName": "FX_IDC:USDBRL", "title": "D\u00f3lar"}, {"proName": "FX_IDC:EURBRL", "title": "Euro"}, {"proName": "FOREXCOM:SPXUSD", "title": "S&P 500"}, {"proName": "FOREXCOM:NSXUSD", "title": "Nasdaq"}, {"proName": "FOREXCOM:DJI", "title": "Dow Jones"}, {"proName": "BMFBOVESPA:PETR4", "title": "PETR4"}, {"proName": "BMFBOVESPA:VALE3", "title": "VALE3"}, {"proName": "BMFBOVESPA:WEGE3", "title": "WEGE3"}],
+  "showSymbolLogo": true,
+  "isTransparent": false,
+  "displayMode": "adaptive",
+  "colorTheme": "light",
+  "locale": "br"
+  }
+  </script>
+</div>
+</div>
+
+<main>
+
+<div class="intro">
+<span class="selo">🔄 Atualização automática diária</span>
+<p><strong>Este portal é uma ferramenta de apoio à decisão</strong> — não uma recomendação de
+investimento. Ele reúne, organiza e calcula indicadores a partir de fontes públicas e oficiais
+sobre as empresas do Ibovespa: preços e proventos da B3, e Demonstrações Financeiras (DRE e
+Balanço Patrimonial) da CVM.</p>
+<p>Os dados são coletados e recalculados automaticamente todos os dias, sem intervenção manual.
+Passe o mouse (ou toque, no celular) sobre qualquer indicador nas páginas de cada empresa para
+ver a fórmula usada e como interpretá-lo.</p>
+
+<div class="taxas-bcb">
+  <div class="taxa-item">Selic Meta: <b>15.00% a.a.</b><span class="taxa-data">Banco Central · 01/09/2026</span></div>
+  <div class="taxa-item">CDI: <b>14.90% a.a.</b><span class="taxa-data">Banco Central · 01/09/2026</span></div>
+  <div class="taxa-item">IPCA (mês): <b>0.35%</b><span class="taxa-data">Banco Central · 01/08/2026</span></div>
+</div>
+
+</div>
+
+
+<div class="grid">
+
+<a class="card" href="PETR4.html">
+<div class="top"><div class="ticker">PETR4</div>
+<span class="pill pos">9.9%</span></div>
+<div class="setor">Petrobras · Petróleo e Gás</div>
+<div class="preco">R$ 38.50</div>
+<div class="linha-mini"><span>P/L 6.50x</span><span>DY 12.0%</span><span>12m 15.0%</span></div>
+</a>
+
+<a class="card" href="VALE3.html">
+<div class="top"><div class="ticker">VALE3</div>
+<span class="pill neg">-8.3%</span></div>
+<div class="setor">Vale · Mineração</div>
+<div class="preco">R$ 60.00</div>
+<div class="linha-mini"><span>P/L 5.10x</span><span>DY 9.0%</span><span>12m -8.0%</span></div>
+</a>
+
+<a class="card" href="WEGE3.html">
+<div class="top"><div class="ticker">WEGE3</div>
+<span class="pill pos">6.7%</span></div>
+<div class="setor">WEG · Bens de Capital</div>
+<div class="preco">R$ 45.00</div>
+<div class="linha-mini"><span>P/L 28.00x</span><span>DY 1.5%</span><span>12m 22.0%</span></div>
+</a>
+
+</div>
+
+<div class="feedback">
+<h2>O que você achou do portal?</h2>
+<p>Sua opinião ajuda a decidir o que melhorar primeiro — leva menos de 1 minuto.</p>
+<a class="botao" href="mailto:teste@exemplo.com" target="_blank" rel="noopener">Deixar minha avaliação</a>
+</div>
+
+</main>
+<footer>Este conteúdo tem caráter exclusivamente informativo e educacional, não constitui recomendação de compra ou venda de valores mobiliários (CVM Resolução 20/2021). As metodologias de valuation aqui apresentadas são simplificações e não substituem análise profissional.</footer>
+</body></html>

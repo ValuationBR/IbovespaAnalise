@@ -1,0 +1,193 @@
+================================================================
+ PAINEL IBOVESPA — GUIA COMPLETO, DO ZERO
+================================================================
+Este guia cobre TUDO: desde rodar a ferramenta no seu PC (gera um
+Excel) até publicar como site na internet, atualizado sozinho todo
+dia, de graça. Siga as partes na ordem — cada uma depende da anterior.
+
+O QUE ESTE PROJETO FAZ:
+ - Coleta preço, valor de mercado, CNPJ e setor de cada empresa -> brapi.dev (grátis)
+ - Coleta dividendos/JCP -> site da B3 (grátis, endpoint público)
+ - Coleta DRE e Balanço Patrimonial -> CVM (dados oficiais, grátis)
+ - Coleta notícias recentes -> Google Notícias (grátis)
+ - Seleciona sozinho as 40 maiores empresas por valor de mercado
+ - Calcula 20 indicadores, valuation por 3 métodos, e um comentário automático
+ - Gera um Excel (PARTE 1) e/ou um site (PARTE 2) com tudo isso
+
+
+################################################################
+PARTE 1 — FERRAMENTA LOCAL (Excel, no seu PC, sem custo nenhum)
+################################################################
+
+PASSO 1.1 — Verificar o Python
+--------------------------------
+Prompt de Comando (tecla Windows > digite "cmd") > digite:
+   python --version
+Deve aparecer "Python 3.14.x" (ou parecido). Se der erro, reinstale o
+Python marcando "Add Python to PATH".
+
+PASSO 1.2 — Organizar os arquivos
+--------------------------------
+Crie a pasta C:\IbovespaAnalise e coloque todos os arquivos que te
+entreguei dentro dela (mantendo as subpastas sql\ e .github\ como estão).
+No Prompt de Comando: cd C:\IbovespaAnalise
+
+PASSO 1.3 — Instalar as bibliotecas
+--------------------------------
+   pip install -r requirements.txt
+
+PASSO 1.4 — Criar o banco de dados
+--------------------------------
+Abra o pgAdmin4 > botão direito em "Databases" > "Create" > "Database..."
+Nome: ibovespa_db > Save.
+(As tabelas dentro dele são criadas automaticamente no Passo 1.6.)
+
+PASSO 1.5 — Obter o token gratuito da brapi.dev
+--------------------------------
+Acesse https://brapi.dev/dashboard, crie conta grátis, copie o token.
+
+PASSO 1.6 — Editar config.py
+--------------------------------
+Abra config.py com o Bloco de Notas e troque:
+ - DB_PASSWORD: a senha que você definiu ao instalar o PostgreSQL
+ - DB_USER: só troque se não for "postgres"
+ - BRAPI_TOKEN: o token do Passo 1.5 (cole só o código, sem "BRAPI_TOKEN=")
+Salve e feche.
+
+Ainda no Prompt de Comando:
+   python criar_banco.py
+Deve terminar com "Banco de dados pronto!".
+
+PASSO 1.7 — Rodar a primeira atualização completa
+--------------------------------
+   python atualizar_tudo.py
+Na primeira vez demora mais (baixa vários anos de dados da CVM — depois
+fica em cache). O Excel final aparece em:
+   C:\IbovespaAnalise\saida\Ibovespa_Analise.xlsx
+
+PASSO 1.8 — Automatizar (opcional)
+--------------------------------
+Agendador de Tarefas do Windows > "Criar Tarefa Básica" > Diariamente >
+Ação "Iniciar um programa" > Programa: python > Argumentos:
+atualizar_tudo.py > Iniciar em: C:\IbovespaAnalise
+Se preferir, pule isso e rode o Passo 1.7 manualmente quando quiser.
+
+PASSO 1.9 — Destaques para newsletter/redes sociais (opcional)
+--------------------------------
+   python gerar_destaques_newsletter.py
+Gera um texto pronto para copiar e colar, salvo também em
+saida\Destaques_Semana.txt.
+
+
+################################################################
+PARTE 2 — PUBLICAR COMO SITE (nuvem, grátis)
+################################################################
+Tudo aqui é opcional e independente da Parte 1 — o Excel local continua
+funcionando sozinho se você preferir não publicar nada. Esta parte move
+o banco de dados para a nuvem (para o site conseguir acessá-lo) e usa o
+GitHub para rodar tudo automaticamente todo dia, sem precisar do seu PC
+ligado.
+
+Contas gratuitas que você vai precisar criar: Supabase e GitHub.
+
+PASSO 2.1 — Criar o banco de dados na nuvem (Supabase)
+--------------------------------
+1. Acesse https://supabase.com e crie uma conta grátis.
+2. "New Project" > escolha um nome e uma senha forte (ANOTE essa senha).
+3. Espere o projeto ser criado (~2 min).
+4. Vá em "Project Settings" (ícone de engrenagem) > "Database".
+5. Em "Connection parameters", anote: Host, Port, Database name, User.
+   A senha é a que você definiu no passo 2.
+
+PASSO 2.2 — Testar a conexão com o Supabase pelo seu PC
+--------------------------------
+Edite config.py temporariamente com os dados do Supabase (DB_HOST,
+DB_PORT, DB_NAME, DB_USER, DB_PASSWORD) e troque:
+   DB_SSLMODE = "require"
+Rode: python criar_banco.py
+Se terminar com "Banco de dados pronto!", a conexão funciona. Depois
+rode: python atualizar_tudo.py (para popular o banco na nuvem).
+
+PASSO 2.3 — Criar o repositório no GitHub
+--------------------------------
+1. Acesse https://github.com e crie uma conta grátis (se não tiver).
+2. "New repository" > nome (ex: painel-ibovespa) > pode deixar Private
+   (o site publicado fica público mesmo assim, só o código fica privado)
+   > Create repository.
+3. Suba os arquivos da pasta C:\IbovespaAnalise para esse repositório
+   (o jeito mais simples: instale o GitHub Desktop, https://desktop.github.com,
+   e use "Add local repository" apontando para C:\IbovespaAnalise, depois
+   "Publish repository").
+
+IMPORTANTE: NÃO deixe sua senha de verdade dentro de config.py antes de
+subir para o GitHub. Volte config.py para os valores de exemplo
+("SUA_SENHA_AQUI" etc.) antes do Passo 2.3 — as senhas de verdade vão
+morar nos "Secrets" do GitHub (Passo 2.4), não no código.
+
+PASSO 2.4 — Configurar os Secrets no GitHub
+--------------------------------
+No repositório, no GitHub: "Settings" > "Secrets and variables" >
+"Actions" > "New repository secret". Crie um secret para cada um destes
+(nome exatamente como está, valor é o dado real do Supabase/brapi.dev):
+
+   DB_HOST          (do Supabase)
+   DB_PORT          (do Supabase, geralmente 5432 ou 6543)
+   DB_NAME          (do Supabase, geralmente "postgres")
+   DB_USER          (do Supabase)
+   DB_PASSWORD      (a senha que você definiu ao criar o projeto Supabase)
+   BRAPI_TOKEN      (o token do Passo 1.5)
+   LINK_FEEDBACK    (opcional — link do Google Forms, ou deixe em branco)
+   ANTHROPIC_API_KEY (opcional — só se for usar comentário de notícias por IA)
+
+PASSO 2.5 — Ativar o GitHub Pages
+--------------------------------
+No repositório: "Settings" > "Pages" > em "Build and deployment" >
+"Source", escolha "GitHub Actions". Não precisa mexer em mais nada aqui.
+
+PASSO 2.6 — Rodar pela primeira vez
+--------------------------------
+No repositório: aba "Actions" > clique no workflow "Atualizar dados e
+publicar site" > "Run workflow" > "Run workflow" (botão verde).
+Acompanhe a execução (leva alguns minutos na primeira vez). Quando
+terminar, o link do site aparece em "Settings" > "Pages", algo como:
+   https://seu-usuario.github.io/painel-ibovespa/
+
+PASSO 2.7 — Pronto, roda sozinho
+--------------------------------
+O workflow já está configurado para rodar automaticamente todo dia
+(dias úteis, 18h de Brasília — pode ajustar o horário editando a linha
+"cron" em .github/workflows/atualizar.yml). Não precisa fazer mais nada.
+
+
+################################################################
+SE ALGO DER ERRO
+################################################################
+- Parte 1 (local): confira o arquivo logs\atualizacao.log, e a tabela
+  log_execucao no pgAdmin4 (veja exemplos de consulta SQL nas mensagens
+  anteriores desta conversa).
+- Parte 2 (site): aba "Actions" no GitHub mostra o log completo de cada
+  execução — clique na execução que falhou para ver o erro exato.
+- Erro de conexão no Supabase: confira se DB_SSLMODE está como "require"
+  e se os Secrets do GitHub batem exatamente com os dados do Supabase.
+- Sempre que dermos erros novos nesta conversa, me mande a mensagem
+  exata (do log local ou do GitHub Actions) que eu ajusto o código.
+
+
+################################################################
+OBSERVAÇÕES IMPORTANTES
+################################################################
+- O programa analisa as 40 maiores empresas por valor de mercado no
+  momento — recalculado sozinho a cada execução.
+- Histórico de PREÇO começa a partir de agora e cresce com o tempo
+  (limite do plano gratuito da brapi.dev). Histórico de DRE/BALANÇO já
+  vem completo desde 2020 (fonte: CVM).
+- Bancos e seguradoras usam plano de contas diferente (COSIF); alguns
+  indicadores (Dívida Líquida/EBITDA, EV/EBITDA) podem ficar em branco
+  para eles — é esperado.
+- "Alvo Bazin" só aparece se houver dividendos identificados nos
+  últimos 12 meses (fonte: site da B3, endpoint não-oficial).
+- Notícias e comentários automáticos são só apoio à leitura, não
+  substituem checagem manual nem são recomendação de investimento
+  (ver disclaimer no rodapé do Excel/site).
+- Todos os métodos de valuation (Graham, Bazin, DCF) são aproximações.
+================================================================
