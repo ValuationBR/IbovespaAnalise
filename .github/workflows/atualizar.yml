@@ -1,6 +1,76 @@
-bash
+name: Atualizar dados e publicar site
 
-cp /home/claude/ibovespa/.github/workflows/atualizar.yml /mnt/user-data/outputs/atualizar.yml
-Saída
+on:
+  schedule:
+    - cron: "0 21 * * 1-5"   # 21:00 UTC = 18:00 em Brasília, dias úteis (ajuste se quiser outro horário)
+  workflow_dispatch: {}       # permite rodar manualmente pelo botão "Run workflow" no GitHub
 
-exit code 0
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  atualizar-e-publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Baixar o código do repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar as bibliotecas do projeto
+        run: pip install -r requirements.txt
+
+      - name: Garantir que a estrutura do banco de dados está atualizada
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_SSLMODE: "require"
+        run: python criar_banco.py
+
+      - name: Rodar a atualização diária (coleta + indicadores + valuation + Excel)
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_SSLMODE: "require"
+          BRAPI_TOKEN: ${{ secrets.BRAPI_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LINK_FEEDBACK: ${{ secrets.LINK_FEEDBACK }}
+        run: python atualizar_tudo.py
+
+      - name: Gerar o site (HTML)
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_SSLMODE: "require"
+          LINK_FEEDBACK: ${{ secrets.LINK_FEEDBACK }}
+        run: python gerar_site.py
+
+      - name: Preparar arquivos para o GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
