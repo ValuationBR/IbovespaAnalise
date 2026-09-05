@@ -3,7 +3,6 @@ Busca, direto na API gratuita do Banco Central do Brasil (SGS - Sistema
 Gerenciador de Séries Temporais, sem necessidade de chave), as taxas de
 juros mais recentes:
  - Selic Meta (definida pelo Copom) — referência de curto prazo
- - CDI — acompanha de perto a Selic
  - IPCA mensal — inflação do último mês fechado
 
 Documentação: https://dadosabertos.bcb.gov.br
@@ -22,7 +21,6 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados/ultimos
 
 SERIES = {
     "selic_meta": 432,   # Taxa Selic Meta definida pelo Copom (% a.a.)
-    "cdi": 12,           # CDI (% a.a.)
     "ipca_mensal": 433,  # IPCA - variação mensal (%)
 }
 

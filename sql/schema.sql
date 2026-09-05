@@ -9,8 +9,10 @@ CREATE TABLE IF NOT EXISTS empresas (
     nome            VARCHAR(100) NOT NULL,
     cnpj            VARCHAR(20),
     setor           VARCHAR(100),
+    logo_url        TEXT,
     selecionada     BOOLEAN DEFAULT FALSE
 );
+ALTER TABLE empresas ADD COLUMN IF NOT EXISTS logo_url TEXT;
 ALTER TABLE empresas ADD COLUMN IF NOT EXISTS cnpj VARCHAR(20);
 ALTER TABLE empresas ADD COLUMN IF NOT EXISTS setor VARCHAR(100);
 ALTER TABLE empresas ADD COLUMN IF NOT EXISTS selecionada BOOLEAN DEFAULT FALSE;
@@ -80,6 +82,7 @@ CREATE TABLE IF NOT EXISTS indicadores (
     payout                  NUMERIC(14,4),
     giro_ativo              NUMERIC(14,4),
     variacao_12m            NUMERIC(14,4),
+    variacao_diaria         NUMERIC(14,4),
     correlacao_carteira     NUMERIC(14,4),
     correlacao_setor        NUMERIC(14,4),
     volatilidade_anual      NUMERIC(14,4),
@@ -96,6 +99,7 @@ ALTER TABLE indicadores ADD COLUMN IF NOT EXISTS volatilidade_anual NUMERIC(14,4
 ALTER TABLE indicadores ADD COLUMN IF NOT EXISTS beta NUMERIC(14,4);
 ALTER TABLE indicadores ADD COLUMN IF NOT EXISTS cagr_receita NUMERIC(14,4);
 ALTER TABLE indicadores ADD COLUMN IF NOT EXISTS comentario TEXT;
+ALTER TABLE indicadores ADD COLUMN IF NOT EXISTS variacao_diaria NUMERIC(14,4);
 
 -- Histórico diário dos indicadores (um "retrato" por dia, não sobrescreve
 -- o anterior) — permite análise temporal (ex: evolução do P/L ou do ROE

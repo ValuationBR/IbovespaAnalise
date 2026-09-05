@@ -14,16 +14,16 @@
 import os
 
 # ---- Banco de dados PostgreSQL ----
-DB_HOST = os.environ.get("DB_HOST", "?")
-DB_PORT = os.environ.get("DB_PORT", "?")
-DB_NAME = os.environ.get("DB_NAME", "?")
-DB_USER = os.environ.get("DB_USER", "?")
+DB_HOST = os.environ.get("DB_HOST", "localhost")
+DB_PORT = os.environ.get("DB_PORT", "5432")
+DB_NAME = os.environ.get("DB_NAME", "ibovespa_db")
+DB_USER = os.environ.get("DB_USER", "postgres")
 DB_PASSWORD = os.environ.get("DB_PASSWORD", "SUA_SENHA_AQUI")
-DB_SSLMODE = os.environ.get("DB_SSLMODE", "require")  # "prefer" local; "require" no Supabase/nuvem
+DB_SSLMODE = os.environ.get("DB_SSLMODE", "prefer")  # "prefer" local; "require" no Supabase/nuvem
 
 # ---- Token gratuito da API brapi.dev ----
 # Crie sua conta grátis em https://brapi.dev/dashboard e copie o token.
-BRAPI_TOKEN = os.environ.get("BRAPI_TOKEN", "?")
+BRAPI_TOKEN = os.environ.get("BRAPI_TOKEN", "SEU_TOKEN_AQUI")
 
 # ---- Pasta onde o Excel final será salvo ----
 PASTA_SAIDA = "saida"            # será criada automaticamente ao lado dos scripts

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PETR4 — Petrobras · ValuationBR</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root {
+  --azul-escuro: #1f3864; --azul-claro: #eaf1fb; --verde: #1e7e34;
+  --vermelho: #b02a2a; --cinza: #6b7280; --borda: #e5e7eb; --bg: #f7f8fa;
+}
+* { box-sizing: border-box; }
+body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background: var(--bg);
+       color: #1a1a1a; margin: 0; line-height: 1.5; }
+header { background: var(--azul-escuro); color: #fff; padding: 24px 20px; }
+header h1 { margin: 0; font-size: 1.5rem; }
+header p { margin: 4px 0 0; color: #cbd8ef; font-size: 0.9rem; }
+main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 60px; }
+a { color: var(--azul-escuro); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.card { background: #fff; border: 1px solid var(--borda); border-radius: 12px; padding: 18px;
+        text-decoration: none; color: inherit; display: block; transition: box-shadow .15s, transform .15s; }
+.card:hover { box-shadow: 0 6px 16px rgba(31,56,100,.10); transform: translateY(-2px); }
+.card .top { display: flex; justify-content: space-between; align-items: baseline; }
+.card .ticker { font-weight: 700; font-size: 1.1rem; color: var(--azul-escuro); }
+.card .nome, .card .setor { color: var(--cinza); font-size: 0.82rem; margin-top: 2px; }
+.card .preco { font-size: 1.35rem; font-weight: 700; margin-top: 10px; color: #1a1a1a; }
+.card .linha-mini { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.82rem; color: var(--cinza); }
+.pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
+.pill.pos { background: #e6f4ea; color: var(--verde); }
+.pill.neg { background: #fbe9e9; color: var(--vermelho); }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; background: #fff; }
+th, td { padding: 8px 10px; border-bottom: 1px solid var(--borda); text-align: left; white-space: nowrap; }
+th { background: var(--azul-claro); color: var(--azul-escuro); position: sticky; top: 0; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--borda); border-radius: 8px; }
+.secao { margin-top: 28px; }
+.secao h2 { color: var(--azul-escuro); font-size: 1.1rem; border-bottom: 2px solid var(--azul-claro); padding-bottom: 6px; }
+.indicadores { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.indicador { background: #fff; border: 1px solid var(--borda); border-radius: 8px; padding: 10px 12px; }
+.indicador .label { font-size: 0.75rem; color: var(--cinza); }
+.indicador .valor { font-size: 1.05rem; font-weight: 700; }
+.noticia { background: #fff; border: 1px solid var(--borda); border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+.noticia .data { color: var(--cinza); font-size: 0.78rem; }
+.comentario-box { background: #fff; border-left: 4px solid var(--azul-escuro); padding: 12px 16px; border-radius: 6px; }
+footer { color: var(--cinza); font-size: 0.78rem; padding: 20px 16px 40px; max-width: 1100px; margin: 0 auto; }
+.voltar { display: inline-block; margin-bottom: 16px; font-size: 0.9rem; }
+.intro { background: #fff; border: 1px solid var(--borda); border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; }
+.intro p { margin: 0 0 8px; color: #374151; font-size: 0.92rem; }
+.intro p:last-child { margin-bottom: 0; }
+.selo { display: inline-flex; align-items: center; gap: 6px; background: var(--azul-claro); color: var(--azul-escuro);
+        font-size: 0.78rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+.feedback { background: #fff; border: 1px solid var(--borda); border-radius: 12px; padding: 20px; margin-top: 32px; text-align: center; }
+.feedback h2 { margin-top: 0; color: var(--azul-escuro); font-size: 1.05rem; }
+.feedback p { color: var(--cinza); font-size: 0.88rem; }
+.botao { display: inline-block; background: var(--azul-escuro); color: #fff; padding: 10px 20px;
+         border-radius: 8px; font-weight: 600; font-size: 0.88rem; margin-top: 6px; }
+.taxas-bcb { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0 4px; }
+.taxa-item { background: var(--azul-claro); border-radius: 8px; padding: 8px 14px; font-size: 0.85rem; }
+.taxa-item b { color: var(--azul-escuro); font-size: 1rem; }
+.taxa-item .taxa-data { color: var(--cinza); font-size: 0.72rem; display: block; }
+.ticker-tape-wrap { border-bottom: 1px solid var(--borda); background: #fff; }
+.delay-notice { text-align: center; font-size: 0.74rem; color: var(--cinza); padding: 5px 8px; background: #fff; border-bottom: 1px solid var(--borda); }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon svg { display: block; }
+.brand-name { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.3px; color: #fff; }
+.brand-name b { color: #35d492; font-weight: 800; }
+.hero-ibov { background: linear-gradient(135deg, var(--azul-escuro), #2c4d82); color: #fff;
+             border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; }
+.hero-ibov h3 { margin: 0; font-size: 1rem; font-weight: 700; }
+.hero-ibov .hero-sub { color: #cbd8ef; font-size: 0.78rem; margin: 2px 0 8px; }
+.destaques { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.destaque-item { background: #fff; border: 1px solid var(--borda); border-left: 4px solid var(--azul-escuro);
+                  border-radius: 8px; padding: 12px 14px; font-size: 0.85rem; color: #374151; }
+.destaque-item .rotulo { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+                          letter-spacing: .04em; color: var(--azul-escuro); margin-bottom: 4px; }
+.card .logo-linha { display: flex; align-items: center; gap: 8px; }
+.card .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--azul-claro); color: var(--azul-escuro);
+                font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.card .logo-img { width: 28px; height: 28px; border-radius: 50%; object-fit: contain; background: #fff; border: 1px solid var(--borda); flex-shrink: 0; }
+
+/* Tooltip de explicação — funciona com mouse (hover) e toque (clique) */
+.tip { position: relative; cursor: help; border-bottom: 1px dotted var(--cinza); }
+.tip::after {
+  content: attr(data-tip);
+  position: absolute; left: 0; bottom: 130%; z-index: 30;
+  background: #1a1a1a; color: #fff; padding: 10px 12px; border-radius: 8px;
+  font-size: 0.78rem; font-weight: 400; line-height: 1.45;
+  width: 260px; max-width: 75vw; box-shadow: 0 8px 22px rgba(0,0,0,.22);
+  opacity: 0; visibility: hidden; transform: translateY(4px);
+  transition: opacity .12s, transform .12s; pointer-events: none;
+}
+.tip:hover::after, .tip.show::after { opacity: 1; visibility: visible; transform: translateY(0); }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+<body>
+<header>
+<div class="brand"><svg width="32" height="32" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M4 30 L14 18 L20 24 L36 8" stroke="#35d492" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="36" cy="8" r="3.4" fill="#35d492"/></svg><span class="brand-name">Valuation<b>BR</b></span></div>
+<p>PETR4 — Petrobras · Petróleo e Gás · Atualizado em 04/09/2026</p></header>
+<main>
+<a class="voltar" href="index.html">&larr; Voltar para todas as empresas</a>
+
+<h1 style="color:var(--azul-escuro); font-size:1.4rem; margin: 0 0 12px;">PETR4 — Petrobras</h1>
+
+<div class="intro">
+<p>Aqui poderão verificar todos os dados relevantes para uma análise fundamental da ação.
+O Claude.AI nos auxilia com a coleta de notícias relevantes diariamente, classificando o
+potencial peso das mesmas no valuation da ação e avalia os pontos fortes e fracos da ação.</p>
+</div>
+
+<div class="secao">
+<h2>Evolução do preço</h2>
+<canvas id="grafico" height="90"></canvas>
+</div>
+
+<div class="secao">
+<h2>Indicadores <span style="font-weight:400;font-size:0.75rem;color:var(--cinza)">(passe o mouse ou clique no nome)</span></h2>
+<div class="indicadores">
+
+<div class="indicador"><div class="label tip" data-tip="Preço / Lucro. Fórmula: Valor de Mercado ÷ Lucro Líquido. Quantos anos de lucro atual seriam necessários para &#x27;pagar&#x27; a ação. Mais baixo pode indicar ação mais barata (ou risco maior); mais alto pode indicar crescimento esperado (ou ação cara).">P/L</div><div class="valor">6.50x</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Preço / Valor Patrimonial. Fórmula: Valor de Mercado ÷ Patrimônio Líquido. Compara o preço de mercado com o patrimônio contábil da empresa. Abaixo de 1 pode indicar desconto em relação ao patrimônio.">P/VP</div><div class="valor">1.20x</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Return on Equity (Retorno sobre o Patrimônio Líquido). Fórmula: Lucro Líquido ÷ Patrimônio Líquido. Mostra a rentabilidade que a empresa gera com o capital dos acionistas. Quanto maior, melhor (em geral).">ROE</div><div class="valor">25.0%</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Return on Invested Capital (Retorno sobre o Capital Investido). Fórmula: Lucro Líquido ÷ (Patrimônio Líquido + Dívida Líquida). Mede o retorno sobre todo o capital investido na empresa (próprio + de terceiros). Quanto maior, mais eficiente a empresa.">ROIC</div><div class="valor">18.0%</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Return on Assets (Retorno sobre os Ativos). Fórmula: Lucro Líquido ÷ Ativo Total. Mostra a eficiência da empresa em gerar lucro com todos os seus ativos.">ROA</div><div class="valor">10.0%</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Dividend Yield. Fórmula: Dividendos pagos nos últimos 12 meses ÷ Preço Atual. Percentual do preço da ação devolvido em dividendos/JCP no ano. Quanto maior, mais a ação &#x27;paga&#x27; via proventos.">Div. Yield</div><div class="valor">12.0%</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Fórmula: Lucro Bruto ÷ Receita Total. Percentual da receita que sobra depois do custo direto do produto/serviço.">Margem Bruta</div><div class="valor">40.0%</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Fórmula: Lucro Líquido ÷ Receita Total. Percentual da receita que vira lucro líquido, depois de todas as despesas e impostos.">Margem Líquida</div><div class="valor">18.0%</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Fórmula: EBITDA ÷ Receita Total. Percentual da receita convertido em geração de caixa operacional, antes de juros, impostos, depreciação e amortização.">Margem EBITDA</div><div class="valor">30.0%</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Liquidez Corrente. Fórmula: Ativo Circulante ÷ Passivo Circulante. Capacidade de pagar as dívidas de curto prazo com os bens/direitos de curto prazo. Acima de 1 costuma ser considerado saudável.">Liq. Corrente</div><div class="valor">1.30</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Dívida Líquida / EBITDA. Fórmula: (Dívida Bruta − Caixa) ÷ EBITDA. Quantos anos de geração de caixa (EBITDA) seriam necessários para quitar a dívida líquida. Quanto menor (ou negativo/caixa líquido), melhor.">Dív.Líq/EBITDA</div><div class="valor">1.50x</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Enterprise Value / EBITDA. Fórmula: (Valor de Mercado + Dívida Líquida) ÷ EBITDA. Múltiplo de valuation que considera também a dívida da empresa (diferente do P/L). Comparável entre empresas com estruturas de capital diferentes.">EV/EBITDA</div><div class="valor">4.20x</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Enterprise Value / Receita. Fórmula: (Valor de Mercado + Dívida Líquida) ÷ Receita Total. Quantas vezes a receita anual o mercado está pagando pela empresa (dívida incluída).">EV/Receita</div><div class="valor">2.10x</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Fórmula: Total de Dividendos Pagos ÷ Lucro Líquido Total. Percentual do lucro que a empresa distribuiu como dividendos/JCP. Acima de 100% significa que distribuiu mais do que lucrou no período.">Payout</div><div class="valor">60.0%</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Fórmula: Receita Total ÷ Ativo Total. Quantas vezes o ativo total &#x27;gira&#x27; em receita no ano. Mede a eficiência da empresa em gerar vendas com seus ativos.">Giro do Ativo</div><div class="valor">0.50</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Variação percentual do preço nos últimos 12 meses (preço atual ÷ preço de ~1 ano atrás − 1). Enquanto o histórico ainda está sendo acumulado, usa a data mais antiga disponível.">Variação 12m</div><div class="valor">15.0%</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Correlação estatística entre os retornos diários da ação e os retornos médios das 40 empresas selecionadas (uma aproximação do Ibovespa, calculada só com os dados coletados aqui — não é o índice oficial). Varia de -1 a 1; perto de 1 = anda junto com o mercado, perto de 0 = pouco relacionada, negativo = anda ao contrário.">Correl. Carteira</div><div class="valor">0.70</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Correlação estatística entre os retornos diários da ação e a média dos retornos das outras empresas selecionadas do mesmo setor. Mesma escala da correlação com a carteira (-1 a 1).">Correl. Setor</div><div class="valor">0.60</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Desvio padrão dos retornos diários, anualizado (× raiz de 252 dias úteis). Mede o quanto o preço da ação costuma oscilar — quanto maior, mais arriscada/volátil a ação tende a ser.">Volatilidade Anual</div><div class="valor">35.0%</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Sensibilidade dos retornos da ação em relação à carteira das 40 selecionadas (proxy do Ibovespa). Beta = 1 significa que a ação costuma se mover na mesma intensidade que o mercado; acima de 1, tende a oscilar mais que o mercado; abaixo de 1, tende a ser mais defensiva.">Beta</div><div class="valor">1.10</div></div>
+
+<div class="indicador"><div class="label tip" data-tip="Crescimento Anual Composto da Receita, calculado entre o primeiro e o último ano disponível na CVM. Fórmula: (Receita final ÷ Receita inicial) ^ (1 ÷ nº de anos) − 1. Mostra a taxa média de crescimento anual da receita no período.">CAGR Receita</div><div class="valor">8.0%</div></div>
+
+</div>
+</div>
+
+<div class="secao">
+<h2>Valuation — preço-alvo por método</h2>
+<div class="table-wrap"><table>
+<tr><th>Método</th><th>Preço-alvo</th><th>Upside</th></tr>
+
+<tr><td class="tip" data-tip="Fórmula de Graham: preço justo = raiz quadrada de (22,5 × Lucro por Ação × Valor Patrimonial por Ação). Método clássico de valuation, adequado para empresas maduras e lucrativas. Fica em branco se o lucro por ação ou o valor patrimonial por ação forem negativos.">Alvo Graham</td><td>R$ 42.00</td><td>9.1%</td></tr>
+
+<tr><td class="tip" data-tip="Método de Bazin: preço-teto = Dividendo pago nos últimos 12 meses por ação ÷ 6%. Método focado em geração de dividendos — parte da ideia de que a ação deveria pagar, no preço-teto, pelo menos 6% de yield ao ano. Fica em branco se a empresa não pagou dividendos no período.">Alvo Bazin</td><td>R$ 45.00</td><td>16.9%</td></tr>
+
+<tr><td class="tip" data-tip="Fluxo de Caixa Descontado simplificado (modelo de perpetuidade de Gordon): valor da empresa = FCF projetado ÷ (taxa de desconto − crescimento na perpetuidade); preço-alvo = valor da empresa ÷ nº de ações. O FCF é aproximado como 75% do EBITDA (proxy simples de capex e impostos, já que o fluxo de caixa livre exato não está disponível nas fontes gratuitas usadas).">Alvo DCF</td><td>R$ 40.00</td><td>3.9%</td></tr>
+
+<tr><td class="tip" data-tip="Média simples dos preços-alvo calculados pelos métodos disponíveis (Graham, Bazin e DCF).">Alvo Médio</td><td>R$ 42.30</td><td>9.9%</td></tr>
+
+</table></div>
+</div>
+
+<div class="secao">
+<h2>Comentário automático</h2>
+<div class="comentario-box">Pontos fortes: ROE elevado.</div>
+</div>
+
+<div class="secao">
+<h2>Notícias recentes</h2>
+
+
+<div class="noticia"><div class="data">30/08/2026 — InfoMoney</div>
+<strong>Petrobras anuncia lucro recorde no trimestre</strong><br>✅ Possível impacto positivo (classificação automática por palavra-chave).</div>
+
+
+</div>
+
+</main>
+<footer>Este conteúdo tem caráter exclusivamente informativo e educacional, não constitui recomendação de compra ou venda de valores mobiliários (CVM Resolução 20/2021). As metodologias de valuation aqui apresentadas são simplificações e não substituem análise profissional.</footer>
+<script>
+const dados = [{"d": "01/01", "v": 35.1}, {"d": "02/01", "v": 35.2}, {"d": "03/01", "v": 35.3}, {"d": "04/01", "v": 35.4}, {"d": "05/01", "v": 35.5}, {"d": "06/01", "v": 35.6}, {"d": "07/01", "v": 35.7}, {"d": "08/01", "v": 35.8}, {"d": "09/01", "v": 35.9}, {"d": "10/01", "v": 36.0}, {"d": "11/01", "v": 36.1}, {"d": "12/01", "v": 36.2}, {"d": "13/01", "v": 36.3}, {"d": "14/01", "v": 36.4}, {"d": "15/01", "v": 36.5}, {"d": "16/01", "v": 36.6}, {"d": "17/01", "v": 36.7}, {"d": "18/01", "v": 36.8}, {"d": "19/01", "v": 36.9}, {"d": "20/01", "v": 37.0}, {"d": "21/01", "v": 37.1}, {"d": "22/01", "v": 37.2}, {"d": "23/01", "v": 37.3}, {"d": "24/01", "v": 37.4}, {"d": "25/01", "v": 37.5}, {"d": "26/01", "v": 37.6}, {"d": "27/01", "v": 37.7}, {"d": "28/01", "v": 37.8}];
+new Chart(document.getElementById('grafico'), {
+  type: 'line',
+  data: { labels: dados.map(p => p.d), datasets: [{ label: 'Preço (R$)', data: dados.map(p => p.v),
+    borderColor: '#1f3864', backgroundColor: 'rgba(31,56,100,0.08)', fill: true, tension: 0.15, pointRadius: 0 }] },
+  options: { responsive: true, plugins: { legend: { display: false } },
+    scales: { x: { ticks: { maxTicksLimit: 8 } } } }
+});
+</script>
+<script>
+document.querySelectorAll('.tip').forEach(function(el) {
+  el.addEventListener('click', function(ev) {
+    ev.stopPropagation();
+    document.querySelectorAll('.tip.show').forEach(function(o) { if (o !== el) o.classList.remove('show'); });
+    el.classList.toggle('show');
+  });
+});
+document.addEventListener('click', function() {
+  document.querySelectorAll('.tip.show').forEach(function(el) { el.classList.remove('show'); });
+});
+</script>
+</body></html>

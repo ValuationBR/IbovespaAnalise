@@ -126,14 +126,21 @@ morar nos "Secrets" do GitHub (Passo 2.4), não no código.
 
 PASSO 2.4 — Configurar os Secrets no GitHub
 --------------------------------
-No repositório, no GitHub: "Settings" > "Secrets and variables" >
-"Actions" > "New repository secret". Crie um secret para cada um destes
-(nome exatamente como está, valor é o dado real do Supabase/brapi.dev):
+IMPORTANTE: use os dados da seção "Connection pooling" do Supabase aqui
+(não a "Connection string" direta do Passo 2.1) — o GitHub Actions não
+tem conexão IPv6, e a conexão direta do Supabase só funciona em IPv6 em
+muitas regiões. O pooler funciona em IPv4 e evita o erro "Network is
+unreachable". Para achar: Project Settings > Database > "Connection
+pooling" (Host tipo aws-0-sa-east-1.pooler.supabase.com, Port 6543,
+User tipo postgres.xxxxxxxxxxxx — repare que o User muda, ganha um sufixo).
 
-   DB_HOST          (do Supabase)
-   DB_PORT          (do Supabase, geralmente 5432 ou 6543)
+No repositório, no GitHub: "Settings" > "Secrets and variables" >
+"Actions" > "New repository secret". Crie um secret para cada um destes:
+
+   DB_HOST          (host do POOLER do Supabase, não o direto)
+   DB_PORT          (porta do POOLER, geralmente 6543)
    DB_NAME          (do Supabase, geralmente "postgres")
-   DB_USER          (do Supabase)
+   DB_USER          (user do POOLER, tipo postgres.xxxxxxxxxxxx)
    DB_PASSWORD      (a senha que você definiu ao criar o projeto Supabase)
    BRAPI_TOKEN      (o token do Passo 1.5)
    LINK_FEEDBACK    (opcional — link do Google Forms, ou deixe em branco)
@@ -169,6 +176,9 @@ SE ALGO DER ERRO
   execução — clique na execução que falhou para ver o erro exato.
 - Erro de conexão no Supabase: confira se DB_SSLMODE está como "require"
   e se os Secrets do GitHub batem exatamente com os dados do Supabase.
+- Erro "Network is unreachable" com um endereço cheio de ":" (IPv6): os
+  Secrets do GitHub estão com os dados da conexão DIRETA do Supabase —
+  troque para os dados do "Connection pooling" (veja Passo 2.4).
 - Sempre que dermos erros novos nesta conversa, me mande a mensagem
   exata (do log local ou do GitHub Actions) que eu ajusto o código.
 

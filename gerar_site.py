@@ -91,6 +91,24 @@ footer { color: var(--cinza); font-size: 0.78rem; padding: 20px 16px 40px; max-w
 .taxa-item b { color: var(--azul-escuro); font-size: 1rem; }
 .taxa-item .taxa-data { color: var(--cinza); font-size: 0.72rem; display: block; }
 .ticker-tape-wrap { border-bottom: 1px solid var(--borda); background: #fff; }
+.delay-notice { text-align: center; font-size: 0.74rem; color: var(--cinza); padding: 5px 8px; background: #fff; border-bottom: 1px solid var(--borda); }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon svg { display: block; }
+.brand-name { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.3px; color: #fff; }
+.brand-name b { color: #35d492; font-weight: 800; }
+.hero-ibov { background: linear-gradient(135deg, var(--azul-escuro), #2c4d82); color: #fff;
+             border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; }
+.hero-ibov h3 { margin: 0; font-size: 1rem; font-weight: 700; }
+.hero-ibov .hero-sub { color: #cbd8ef; font-size: 0.78rem; margin: 2px 0 8px; }
+.destaques { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.destaque-item { background: #fff; border: 1px solid var(--borda); border-left: 4px solid var(--azul-escuro);
+                  border-radius: 8px; padding: 12px 14px; font-size: 0.85rem; color: #374151; }
+.destaque-item .rotulo { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+                          letter-spacing: .04em; color: var(--azul-escuro); margin-bottom: 4px; }
+.card .logo-linha { display: flex; align-items: center; gap: 8px; }
+.card .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--azul-claro); color: var(--azul-escuro);
+                font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.card .logo-img { width: 28px; height: 28px; border-radius: 50%; object-fit: contain; background: #fff; border: 1px solid var(--borda); flex-shrink: 0; }
 
 /* Tooltip de explicação — funciona com mouse (hover) e toque (clique) */
 .tip { position: relative; cursor: help; border-bottom: 1px dotted var(--cinza); }
@@ -119,14 +137,31 @@ document.addEventListener('click', function() {
 });
 """
 
+# Ícone do logo: uma linha ascendente (tendência de alta), usado no cabeçalho e como favicon
+LOGO_ICON_SVG = (
+    '<svg width="32" height="32" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">'
+    '<path d="M4 30 L14 18 L20 24 L36 8" stroke="#35d492" stroke-width="4.5" fill="none" '
+    'stroke-linecap="round" stroke-linejoin="round"/>'
+    '<circle cx="36" cy="8" r="3.4" fill="#35d492"/></svg>'
+)
+FAVICON_SVG = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">'
+    '<rect width="40" height="40" rx="8" fill="#1f3864"/>'
+    '<path d="M6 30 L15 19 L21 25 L34 10" stroke="#35d492" stroke-width="4.5" fill="none" '
+    'stroke-linecap="round" stroke-linejoin="round"/>'
+    '<circle cx="34" cy="10" r="3.2" fill="#35d492"/></svg>'
+)
+
 TEMPLATE_INDEX = Template("""<!DOCTYPE html>
 <html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Painel Ibovespa — 40 Maiores por Valor de Mercado</title>
+<title>ValuationBR — 40 Maiores do Ibovespa por Valor de Mercado</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>{{ css }}</style></head>
 <body>
-<header><h1>Painel Ibovespa — 40 Maiores por Valor de Mercado</h1>
-<p>Atualizado em {{ hoje }}</p></header>
+<header>
+<div class="brand">{{ logo_icon | safe }}<span class="brand-name">Valuation<b>BR</b></span></div>
+<p>40 maiores do Ibovespa por valor de mercado · Atualizado em {{ hoje }}</p></header>
 
 <div class="ticker-tape-wrap">
 <div class="tradingview-widget-container">
@@ -143,33 +178,66 @@ TEMPLATE_INDEX = Template("""<!DOCTYPE html>
   </script>
 </div>
 </div>
+<div class="delay-notice">⏱️ Cotações com defasagem de aproximadamente 15 minutos.</div>
 
 <main>
 
 <div class="intro">
 <span class="selo">🔄 Atualização automática diária</span>
-<p><strong>Este portal é uma ferramenta de apoio à decisão</strong> — não uma recomendação de
-investimento. Ele reúne, organiza e calcula indicadores a partir de fontes públicas e oficiais
-sobre as empresas do Ibovespa: preços e proventos da B3, e Demonstrações Financeiras (DRE e
-Balanço Patrimonial) da CVM.</p>
-<p>Os dados são coletados e recalculados automaticamente todos os dias, sem intervenção manual.
-Passe o mouse (ou toque, no celular) sobre qualquer indicador nas páginas de cada empresa para
-ver a fórmula usada e como interpretá-lo.</p>
+<p>Este portal é uma ferramenta que reúne, organiza e calcula indicadores a partir de fontes
+públicas e oficiais sobre as empresas do Ibovespa: preços e proventos da B3, e Demonstrações
+Financeiras (DRE e Balanço Patrimonial) da CVM. Brevemente outros índices e ações constituintes
+estarão disponíveis.</p>
+<p>Os dados são coletados e recalculados automaticamente todos os dias com o apoio do Claude.AI.
+Toda a informação disponível neste portal pretende ser informativa e não é recomendação de
+investimento.</p>
 {% if taxas %}
 <div class="taxas-bcb">
   {% if taxas.selic_meta.valor %}<div class="taxa-item">Selic Meta: <b>{{ taxas.selic_meta.valor }}% a.a.</b><span class="taxa-data">Banco Central · {{ taxas.selic_meta.data }}</span></div>{% endif %}
-  {% if taxas.cdi.valor %}<div class="taxa-item">CDI: <b>{{ taxas.cdi.valor }}% a.a.</b><span class="taxa-data">Banco Central · {{ taxas.cdi.data }}</span></div>{% endif %}
   {% if taxas.ipca_mensal.valor %}<div class="taxa-item">IPCA (mês): <b>{{ taxas.ipca_mensal.valor }}%</b><span class="taxa-data">Banco Central · {{ taxas.ipca_mensal.data }}</span></div>{% endif %}
 </div>
 {% endif %}
 </div>
 
+{% if destaques %}
+<div class="destaques">
+  {% if destaques.semana %}<div class="destaque-item"><span class="rotulo">📌 Destaque da semana</span>{{ destaques.semana }}</div>{% endif %}
+  {% if destaques.alta_dia %}<div class="destaque-item"><span class="rotulo">🔼 Destaque do dia</span>{{ destaques.alta_dia }}</div>{% endif %}
+  {% if destaques.queda_dia %}<div class="destaque-item"><span class="rotulo">🔽 Destaque do dia</span>{{ destaques.queda_dia }}</div>{% endif %}
+</div>
+{% endif %}
+
+<div class="hero-ibov">
+<h3>📊 Índice Ibovespa</h3>
+<div class="hero-sub">Cotação com defasagem de ~15 minutos</div>
+<div class="tradingview-widget-container">
+<div class="tradingview-widget-container__widget"></div>
+<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+{
+"symbol": "BMFBOVESPA:IBOV",
+"width": "100%",
+"height": "150",
+"locale": "br",
+"dateRange": "1D",
+"colorTheme": "dark",
+"trendLineColor": "rgba(53, 212, 146, 1)",
+"underLineColor": "rgba(53, 212, 146, 0.15)",
+"isTransparent": true,
+"autosize": true
+}
+</script>
+</div>
+</div>
 
 <div class="grid">
 {% for e in empresas %}
 <a class="card" href="{{ e.ticker }}.html">
-<div class="top"><div class="ticker">{{ e.ticker }}</div>
-<span class="pill {{ 'pos' if e.upside_pos else 'neg' }}">{{ e.upside_fmt }}</span></div>
+<div class="top">
+<div class="logo-linha">
+{% if e.logo_url %}<img class="logo-img" src="{{ e.logo_url }}" alt="{{ e.ticker }}" loading="lazy">{% else %}<div class="avatar">{{ e.ticker[:2] }}</div>{% endif %}
+<div class="ticker">{{ e.ticker }}</div>
+</div>
+<span class="pill {{ 'pos' if e.var_dia_pos else 'neg' }}">{{ e.var_dia_fmt }}</span></div>
 <div class="setor">{{ e.nome }} · {{ e.setor or '—' }}</div>
 <div class="preco">{{ e.preco_fmt }}</div>
 <div class="linha-mini"><span>P/L {{ e.pl_fmt }}</span><span>DY {{ e.dy_fmt }}</span><span>12m {{ e.var12m_fmt }}</span></div>
@@ -190,15 +258,25 @@ ver a fórmula usada e como interpretá-lo.</p>
 TEMPLATE_EMPRESA = Template("""<!DOCTYPE html>
 <html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ e.ticker }} — {{ e.nome }}</title>
+<title>{{ e.ticker }} — {{ e.nome }} · ValuationBR</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>{{ css }}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
 <body>
-<header><h1>{{ e.ticker }} — {{ e.nome }}</h1>
-<p>{{ e.setor or '' }} · Atualizado em {{ hoje }}</p></header>
+<header>
+<div class="brand">{{ logo_icon | safe }}<span class="brand-name">Valuation<b>BR</b></span></div>
+<p>{{ e.ticker }} — {{ e.nome }} · {{ e.setor or '' }} · Atualizado em {{ hoje }}</p></header>
 <main>
 <a class="voltar" href="index.html">&larr; Voltar para todas as empresas</a>
+
+<h1 style="color:var(--azul-escuro); font-size:1.4rem; margin: 0 0 12px;">{{ e.ticker }} — {{ e.nome }}</h1>
+
+<div class="intro">
+<p>Aqui poderão verificar todos os dados relevantes para uma análise fundamental da ação.
+O Claude.AI nos auxilia com a coleta de notícias relevantes diariamente, classificando o
+potencial peso das mesmas no valuation da ação e avalia os pontos fortes e fracos da ação.</p>
+</div>
 
 <div class="secao">
 <h2>Evolução do preço</h2>
@@ -286,8 +364,9 @@ def _num(v):
 
 def montar_empresas_resumo(cur):
     cur.execute(
-        """SELECT e.ticker, e.nome, e.setor, i.preco_atual, i.variacao_12m,
-                  i.pl, i.pvp, i.dividend_yield, v.preco_alvo_medio, v.upside_medio_pct
+        """SELECT e.ticker, e.nome, e.setor, e.logo_url, i.preco_atual, i.variacao_12m,
+                  i.variacao_diaria, i.pl, i.pvp, i.dividend_yield,
+                  v.preco_alvo_medio, v.upside_medio_pct
            FROM empresas e
            LEFT JOIN indicadores i ON i.ticker = e.ticker
            LEFT JOIN valuation v ON v.ticker = e.ticker
@@ -296,18 +375,54 @@ def montar_empresas_resumo(cur):
     )
     empresas = []
     for r in cur.fetchall():
-        upside = _num(r["upside_medio_pct"])
+        var_dia = _num(r["variacao_diaria"])
         empresas.append({
             "ticker": r["ticker"], "nome": r["nome"], "setor": r["setor"],
+            "logo_url": r["logo_url"],
             "preco_fmt": _fmt_moeda(r["preco_atual"]),
             "var12m_fmt": _fmt_pct(r["variacao_12m"]),
+            "var_dia_fmt": _fmt_pct(r["variacao_diaria"]),
+            "var_dia_pos": (var_dia or 0) >= 0,
+            "var_dia_raw": var_dia,
             "pl_fmt": _fmt_x(r["pl"]), "pvp_fmt": _fmt_x(r["pvp"]),
             "dy_fmt": _fmt_pct(r["dividend_yield"]),
             "alvo_fmt": _fmt_moeda(r["preco_alvo_medio"]),
             "upside_fmt": _fmt_pct(r["upside_medio_pct"]),
-            "upside_pos": (upside or 0) >= 0,
+            "upside_raw": _num(r["upside_medio_pct"]),
         })
     return empresas
+
+
+def montar_destaques(empresas_resumo):
+    """Textos curtos de destaque (semana + dia), gerados a partir dos
+    próprios dados calculados — usados na página inicial."""
+    textos = {}
+
+    validos_upside = [e for e in empresas_resumo if e["upside_raw"] is not None]
+    if validos_upside:
+        d = max(validos_upside, key=lambda e: e["upside_raw"])
+        textos["semana"] = (
+            f"{d['ticker']} ({d['nome']}) aparece com o maior potencial estimado pela média dos "
+            f"3 métodos de valuation: upside de {d['upside_fmt']} sobre o preço atual ({d['preco_fmt']})."
+        )
+
+    validos_dia = [e for e in empresas_resumo if e["var_dia_raw"] is not None]
+    if validos_dia:
+        ordenados = sorted(validos_dia, key=lambda e: e["var_dia_raw"], reverse=True)
+        maior_alta = ordenados[0]
+        maior_queda = ordenados[-1]
+        if maior_alta["var_dia_raw"] > 0:
+            textos["alta_dia"] = (
+                f"{maior_alta['ticker']} ({maior_alta['nome']}) lidera as altas do dia, "
+                f"com variação de {maior_alta['var_dia_fmt']}."
+            )
+        if maior_queda is not maior_alta and maior_queda["var_dia_raw"] < 0:
+            textos["queda_dia"] = (
+                f"{maior_queda['ticker']} ({maior_queda['nome']}) teve a maior queda do dia, "
+                f"com variação de {maior_queda['var_dia_fmt']}."
+            )
+
+    return textos
 
 
 def montar_pagina_empresa(cur, ticker, nome, setor):
@@ -389,6 +504,9 @@ def main():
         shutil.rmtree(PASTA_SITE)
     os.makedirs(PASTA_SITE)
 
+    with open(os.path.join(PASTA_SITE, "favicon.svg"), "w", encoding="utf-8") as f:
+        f.write(FAVICON_SVG)
+
     conn = conectar(cursor_factory=psycopg2.extras.RealDictCursor)
     cur = conn.cursor()
 
@@ -398,11 +516,13 @@ def main():
     taxas = buscar_taxas()
 
     empresas_resumo = montar_empresas_resumo(cur)
+    destaques = montar_destaques(empresas_resumo)
     ticker_tape_symbols = json.dumps(montar_simbolos_ticker_tape(empresas_resumo), ensure_ascii=False)
     html_index = TEMPLATE_INDEX.render(
         empresas=empresas_resumo, hoje=hoje, css=CSS_BASE, disclaimer=DISCLAIMER,
         link_feedback=getattr(config, "LINK_FEEDBACK", "mailto:"),
         taxas=taxas, ticker_tape_symbols=ticker_tape_symbols,
+        logo_icon=LOGO_ICON_SVG, destaques=destaques,
     )
     with open(os.path.join(PASTA_SITE, "index.html"), "w", encoding="utf-8") as f:
         f.write(html_index)
@@ -414,6 +534,7 @@ def main():
         html_empresa = TEMPLATE_EMPRESA.render(
             e=dados_pagina, hoje=hoje, css=CSS_BASE, disclaimer=DISCLAIMER,
             precos_json=json.dumps(precos, ensure_ascii=False), js_tooltip=JS_TOOLTIP,
+            logo_icon=LOGO_ICON_SVG,
         )
         with open(os.path.join(PASTA_SITE, f"{emp['ticker']}.html"), "w", encoding="utf-8") as f:
             f.write(html_empresa)

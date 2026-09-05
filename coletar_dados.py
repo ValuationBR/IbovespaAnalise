@@ -61,10 +61,13 @@ def salvar_cnpj(cur, ticker, acao):
     perfil = acao.get("summaryProfile") or {}
     cnpj = perfil.get("cnpj")
     setor = perfil.get("sector") or perfil.get("industry")
+    logo_url = acao.get("logourl") or acao.get("logoUrl") or acao.get("logo")
     if cnpj:
         cur.execute("UPDATE empresas SET cnpj=%s WHERE ticker=%s", (cnpj, ticker))
     if setor:
         cur.execute("UPDATE empresas SET setor=%s WHERE ticker=%s", (setor, ticker))
+    if logo_url:
+        cur.execute("UPDATE empresas SET logo_url=%s WHERE ticker=%s", (logo_url, ticker))
 
 
 def salvar_precos(cur, ticker, acao):
@@ -104,17 +107,21 @@ def _parse_data(valor):
 
 
 def salvar_preco_e_marketcap(cur, ticker, acao):
-    """Guarda preço atual e valor de mercado (marketCap), campos gratuitos
-    sempre presentes na resposta da brapi.dev — usados depois pelo
-    calcular_indicadores.py junto com os dados de DRE/Balanço da CVM."""
+    """Guarda preço atual, valor de mercado (marketCap) e variação diária,
+    campos gratuitos sempre presentes na resposta da brapi.dev — usados
+    depois pelo calcular_indicadores.py junto com os dados de DRE/Balanço
+    da CVM."""
+    variacao_pct = acao.get("regularMarketChangePercent")
+    variacao_diaria = (variacao_pct / 100.0) if variacao_pct is not None else None
     cur.execute(
-        """INSERT INTO indicadores (ticker, preco_atual, market_cap, atualizado_em)
-           VALUES (%s,%s,%s, NOW())
+        """INSERT INTO indicadores (ticker, preco_atual, market_cap, variacao_diaria, atualizado_em)
+           VALUES (%s,%s,%s,%s, NOW())
            ON CONFLICT (ticker) DO UPDATE SET
               preco_atual = EXCLUDED.preco_atual,
               market_cap = EXCLUDED.market_cap,
+              variacao_diaria = EXCLUDED.variacao_diaria,
               atualizado_em = NOW()""",
-        (ticker, acao.get("regularMarketPrice"), acao.get("marketCap")),
+        (ticker, acao.get("regularMarketPrice"), acao.get("marketCap"), variacao_diaria),
     )
 
 

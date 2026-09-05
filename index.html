@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Painel Ibovespa — 40 Maiores por Valor de Mercado</title>
+<title>ValuationBR — 40 Maiores do Ibovespa por Valor de Mercado</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
 :root {
   --azul-escuro: #1f3864; --azul-claro: #eaf1fb; --verde: #1e7e34;
@@ -57,6 +58,24 @@ footer { color: var(--cinza); font-size: 0.78rem; padding: 20px 16px 40px; max-w
 .taxa-item b { color: var(--azul-escuro); font-size: 1rem; }
 .taxa-item .taxa-data { color: var(--cinza); font-size: 0.72rem; display: block; }
 .ticker-tape-wrap { border-bottom: 1px solid var(--borda); background: #fff; }
+.delay-notice { text-align: center; font-size: 0.74rem; color: var(--cinza); padding: 5px 8px; background: #fff; border-bottom: 1px solid var(--borda); }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon svg { display: block; }
+.brand-name { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.3px; color: #fff; }
+.brand-name b { color: #35d492; font-weight: 800; }
+.hero-ibov { background: linear-gradient(135deg, var(--azul-escuro), #2c4d82); color: #fff;
+             border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; }
+.hero-ibov h3 { margin: 0; font-size: 1rem; font-weight: 700; }
+.hero-ibov .hero-sub { color: #cbd8ef; font-size: 0.78rem; margin: 2px 0 8px; }
+.destaques { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.destaque-item { background: #fff; border: 1px solid var(--borda); border-left: 4px solid var(--azul-escuro);
+                  border-radius: 8px; padding: 12px 14px; font-size: 0.85rem; color: #374151; }
+.destaque-item .rotulo { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+                          letter-spacing: .04em; color: var(--azul-escuro); margin-bottom: 4px; }
+.card .logo-linha { display: flex; align-items: center; gap: 8px; }
+.card .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--azul-claro); color: var(--azul-escuro);
+                font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.card .logo-img { width: 28px; height: 28px; border-radius: 50%; object-fit: contain; background: #fff; border: 1px solid var(--borda); flex-shrink: 0; }
 
 /* Tooltip de explicação — funciona com mouse (hover) e toque (clique) */
 .tip { position: relative; cursor: help; border-bottom: 1px dotted var(--cinza); }
@@ -72,15 +91,16 @@ footer { color: var(--cinza); font-size: 0.78rem; padding: 20px 16px 40px; max-w
 .tip:hover::after, .tip.show::after { opacity: 1; visibility: visible; transform: translateY(0); }
 </style></head>
 <body>
-<header><h1>Painel Ibovespa — 40 Maiores por Valor de Mercado</h1>
-<p>Atualizado em 01/09/2026</p></header>
+<header>
+<div class="brand"><svg width="32" height="32" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M4 30 L14 18 L20 24 L36 8" stroke="#35d492" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="36" cy="8" r="3.4" fill="#35d492"/></svg><span class="brand-name">Valuation<b>BR</b></span></div>
+<p>40 maiores do Ibovespa por valor de mercado · Atualizado em 04/09/2026</p></header>
 
 <div class="ticker-tape-wrap">
 <div class="tradingview-widget-container">
   <div class="tradingview-widget-container__widget"></div>
   <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
   {
-  "symbols": [{"proName": "BMFBOVESPA:IBOV", "title": "Ibovespa"}, {"proName": "FX_IDC:USDBRL", "title": "D\u00f3lar"}, {"proName": "FX_IDC:EURBRL", "title": "Euro"}, {"proName": "FOREXCOM:SPXUSD", "title": "S&P 500"}, {"proName": "FOREXCOM:NSXUSD", "title": "Nasdaq"}, {"proName": "FOREXCOM:DJI", "title": "Dow Jones"}, {"proName": "BMFBOVESPA:PETR4", "title": "PETR4"}, {"proName": "BMFBOVESPA:VALE3", "title": "VALE3"}, {"proName": "BMFBOVESPA:WEGE3", "title": "WEGE3"}],
+  "symbols": [{"proName": "BMFBOVESPA:IBOV", "title": "Ibovespa"}, {"proName": "FX_IDC:USDBRL", "title": "D\u00f3lar"}, {"proName": "FX_IDC:EURBRL", "title": "Euro"}, {"proName": "FOREXCOM:SPXUSD", "title": "S&P 500"}, {"proName": "FOREXCOM:NSXUSD", "title": "Nasdaq"}, {"proName": "FOREXCOM:DJI", "title": "Dow Jones"}, {"proName": "BMFBOVESPA:PETR4", "title": "PETR4"}, {"proName": "BMFBOVESPA:VALE3", "title": "VALE3"}, {"proName": "BMFBOVESPA:WEGE3", "title": "WEGE3"}, {"proName": "BMFBOVESPA:ITUB4", "title": "ITUB4"}],
   "showSymbolLogo": true,
   "isTransparent": false,
   "displayMode": "adaptive",
@@ -90,52 +110,105 @@ footer { color: var(--cinza); font-size: 0.78rem; padding: 20px 16px 40px; max-w
   </script>
 </div>
 </div>
+<div class="delay-notice">⏱️ Cotações com defasagem de aproximadamente 15 minutos.</div>
 
 <main>
 
 <div class="intro">
 <span class="selo">🔄 Atualização automática diária</span>
-<p><strong>Este portal é uma ferramenta de apoio à decisão</strong> — não uma recomendação de
-investimento. Ele reúne, organiza e calcula indicadores a partir de fontes públicas e oficiais
-sobre as empresas do Ibovespa: preços e proventos da B3, e Demonstrações Financeiras (DRE e
-Balanço Patrimonial) da CVM.</p>
-<p>Os dados são coletados e recalculados automaticamente todos os dias, sem intervenção manual.
-Passe o mouse (ou toque, no celular) sobre qualquer indicador nas páginas de cada empresa para
-ver a fórmula usada e como interpretá-lo.</p>
+<p>Este portal é uma ferramenta que reúne, organiza e calcula indicadores a partir de fontes
+públicas e oficiais sobre as empresas do Ibovespa: preços e proventos da B3, e Demonstrações
+Financeiras (DRE e Balanço Patrimonial) da CVM. Brevemente outros índices e ações constituintes
+estarão disponíveis.</p>
+<p>Os dados são coletados e recalculados automaticamente todos os dias com o apoio do Claude.AI.
+Toda a informação disponível neste portal pretende ser informativa e não é recomendação de
+investimento.</p>
 
 <div class="taxas-bcb">
-  <div class="taxa-item">Selic Meta: <b>15.00% a.a.</b><span class="taxa-data">Banco Central · 01/09/2026</span></div>
-  <div class="taxa-item">CDI: <b>14.90% a.a.</b><span class="taxa-data">Banco Central · 01/09/2026</span></div>
+  <div class="taxa-item">Selic Meta: <b>15.00% a.a.</b><span class="taxa-data">Banco Central · 04/09/2026</span></div>
   <div class="taxa-item">IPCA (mês): <b>0.35%</b><span class="taxa-data">Banco Central · 01/08/2026</span></div>
 </div>
 
 </div>
 
 
+<div class="destaques">
+  <div class="destaque-item"><span class="rotulo">📌 Destaque da semana</span>PETR4 (Petrobras) aparece com o maior potencial estimado pela média dos 3 métodos de valuation: upside de 9.9% sobre o preço atual (R$ 38.50).</div>
+  <div class="destaque-item"><span class="rotulo">🔼 Destaque do dia</span>PETR4 (Petrobras) lidera as altas do dia, com variação de 2.1%.</div>
+  <div class="destaque-item"><span class="rotulo">🔽 Destaque do dia</span>VALE3 (Vale) teve a maior queda do dia, com variação de -1.5%.</div>
+</div>
+
+
+<div class="hero-ibov">
+<h3>📊 Índice Ibovespa</h3>
+<div class="hero-sub">Cotação com defasagem de ~15 minutos</div>
+<div class="tradingview-widget-container">
+<div class="tradingview-widget-container__widget"></div>
+<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+{
+"symbol": "BMFBOVESPA:IBOV",
+"width": "100%",
+"height": "150",
+"locale": "br",
+"dateRange": "1D",
+"colorTheme": "dark",
+"trendLineColor": "rgba(53, 212, 146, 1)",
+"underLineColor": "rgba(53, 212, 146, 0.15)",
+"isTransparent": true,
+"autosize": true
+}
+</script>
+</div>
+</div>
+
 <div class="grid">
 
 <a class="card" href="PETR4.html">
-<div class="top"><div class="ticker">PETR4</div>
-<span class="pill pos">9.9%</span></div>
+<div class="top">
+<div class="logo-linha">
+<div class="avatar">PE</div>
+<div class="ticker">PETR4</div>
+</div>
+<span class="pill pos">2.1%</span></div>
 <div class="setor">Petrobras · Petróleo e Gás</div>
 <div class="preco">R$ 38.50</div>
 <div class="linha-mini"><span>P/L 6.50x</span><span>DY 12.0%</span><span>12m 15.0%</span></div>
 </a>
 
 <a class="card" href="VALE3.html">
-<div class="top"><div class="ticker">VALE3</div>
-<span class="pill neg">-8.3%</span></div>
+<div class="top">
+<div class="logo-linha">
+<div class="avatar">VA</div>
+<div class="ticker">VALE3</div>
+</div>
+<span class="pill neg">-1.5%</span></div>
 <div class="setor">Vale · Mineração</div>
 <div class="preco">R$ 60.00</div>
 <div class="linha-mini"><span>P/L 5.10x</span><span>DY 9.0%</span><span>12m -8.0%</span></div>
 </a>
 
 <a class="card" href="WEGE3.html">
-<div class="top"><div class="ticker">WEGE3</div>
-<span class="pill pos">6.7%</span></div>
+<div class="top">
+<div class="logo-linha">
+<div class="avatar">WE</div>
+<div class="ticker">WEGE3</div>
+</div>
+<span class="pill pos">0.5%</span></div>
 <div class="setor">WEG · Bens de Capital</div>
 <div class="preco">R$ 45.00</div>
 <div class="linha-mini"><span>P/L 28.00x</span><span>DY 1.5%</span><span>12m 22.0%</span></div>
+</a>
+
+<a class="card" href="ITUB4.html">
+<div class="top">
+<div class="logo-linha">
+<div class="avatar">IT</div>
+<div class="ticker">ITUB4</div>
+</div>
+<span class="pill neg">-0.8%</span></div>
+<div class="setor">Itaú Unibanco · Bancos</div>
+<div class="preco">R$ 34.20</div>
+<div class="linha-mini"><span>P/L 9.80x</span><span>DY 6.0%</span><span>12m 5.0%</span></div>
 </a>
 
 </div>
@@ -143,7 +216,7 @@ ver a fórmula usada e como interpretá-lo.</p>
 <div class="feedback">
 <h2>O que você achou do portal?</h2>
 <p>Sua opinião ajuda a decidir o que melhorar primeiro — leva menos de 1 minuto.</p>
-<a class="botao" href="mailto:teste@exemplo.com" target="_blank" rel="noopener">Deixar minha avaliação</a>
+<a class="botao" href="mailto:x" target="_blank" rel="noopener">Deixar minha avaliação</a>
 </div>
 
 </main>
