@@ -63,19 +63,37 @@ def buscar_trading_name(ticker):
 
 def _tentar_chaves_dividendos(registro):
     """Tenta várias combinações de parâmetro, na ordem mais provável
-    primeiro, e devolve (itens, chave_que_funcionou, respostas_tentadas)."""
+    primeiro, e devolve (itens, chave_que_funcionou, respostas_tentadas).
+    Inclui tentativas com intervalo de datas, caso o endpoint exija um
+    período explícito para não devolver vazio."""
+    hoje = datetime.today()
+    data_final = hoje.strftime("%m-%d-%Y")
+    data_inicial = hoje.replace(year=hoje.year - 3).strftime("%m-%d-%Y")
+
     candidatos = []
     if registro.get("tradingName"):
-        candidatos.append({"tradingName": registro["tradingName"]})
+        candidatos.append(("tradingName", {"tradingName": registro["tradingName"]}))
     if registro.get("issuingCompany"):
-        candidatos.append({"issuingCompany": registro["issuingCompany"]})
+        candidatos.append(("issuingCompany", {"issuingCompany": registro["issuingCompany"]}))
     if registro.get("codeCVM"):
-        candidatos.append({"codeCVM": registro["codeCVM"]})
+        candidatos.append(("codeCVM", {"codeCVM": registro["codeCVM"]}))
     if registro.get("companyName"):
-        candidatos.append({"issuingCompany": registro["companyName"]})
+        candidatos.append(("issuingCompany(nome completo)", {"issuingCompany": registro["companyName"]}))
+    # variações com intervalo de datas (2 nomes de campo diferentes, caso o endpoint exija período)
+    if registro.get("tradingName"):
+        candidatos.append(("tradingName+initialDate/finalDate", {
+            "tradingName": registro["tradingName"], "initialDate": data_inicial, "finalDate": data_final,
+        }))
+        candidatos.append(("tradingName+dateInitial/dateFinal", {
+            "tradingName": registro["tradingName"], "dateInitial": data_inicial, "dateFinal": data_final,
+        }))
+    if registro.get("codeCVM"):
+        candidatos.append(("codeCVM+initialDate/finalDate", {
+            "codeCVM": registro["codeCVM"], "initialDate": data_inicial, "finalDate": data_final,
+        }))
 
     tentativas = []
-    for extra in candidatos:
+    for rotulo, extra in candidatos:
         params_dict = {"language": "pt-br", "pageNumber": 1, "pageSize": 200}
         params_dict.update(extra)
         params = _codificar(params_dict)
@@ -84,11 +102,11 @@ def _tentar_chaves_dividendos(registro):
             status = resp.status_code
             corpo = resp.json() if status < 400 else {}
             itens = corpo.get("results", []) if isinstance(corpo, dict) else []
-            tentativas.append(f"{list(extra.keys())[0]}={list(extra.values())[0]!r} -> HTTP{status}, {len(itens)} itens, chaves_resposta={list(corpo.keys()) if isinstance(corpo, dict) else '?'}")
+            tentativas.append(f"{rotulo} -> HTTP{status}, {len(itens)} itens, chaves_resposta={list(corpo.keys()) if isinstance(corpo, dict) else '?'}")
             if itens:
-                return itens, list(extra.keys())[0], tentativas
+                return itens, rotulo, tentativas
         except Exception as e:
-            tentativas.append(f"{list(extra.keys())[0]} -> ERRO: {e}")
+            tentativas.append(f"{rotulo} -> ERRO: {e}")
     return [], None, tentativas
 
 
