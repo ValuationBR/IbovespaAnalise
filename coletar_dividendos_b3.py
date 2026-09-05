@@ -38,24 +38,62 @@ def _codificar(params_dict):
     return b64encode(texto.encode("utf-8")).decode("utf-8")
 
 
-def buscar_trading_name(ticker):
-    """Descobre o código de 4 letras da empresa (ex: PETR4 -> PETR)."""
+def buscar_registro_empresa(ticker):
+    """Busca o registro completo da empresa no GetInitialCompanies (não só
+    o tradingName) — usado para tentar várias chaves de busca possíveis
+    no GetListedCashDividends, já que o nome exato do parâmetro esperado
+    por esse endpoint não é documentado."""
     codigo_base = ticker[:4]
     params = _codificar({"language": "pt-br", "pageNumber": 1, "pageSize": 20, "company": codigo_base})
     resp = requests.get(URL_INITIAL_COMPANIES.format(params=params), headers=HEADERS, timeout=30)
     resp.raise_for_status()
     dados = resp.json()
-    for item in dados.get("results", []):
-        if str(item.get("issuingCompany", "")).upper() == codigo_base.upper():
-            return item.get("tradingName")
-    # se não achou correspondência exata, usa o primeiro resultado (melhor esforço)
     resultados = dados.get("results", [])
-    if resultados:
-        return resultados[0].get("tradingName")
-    return None
+    for item in resultados:
+        if str(item.get("issuingCompany", "")).upper() == codigo_base.upper():
+            return item
+    return resultados[0] if resultados else None
+
+
+def buscar_trading_name(ticker):
+    """Mantido por compatibilidade: descobre só o tradingName."""
+    registro = buscar_registro_empresa(ticker)
+    return registro.get("tradingName") if registro else None
+
+
+def _tentar_chaves_dividendos(registro):
+    """Tenta várias combinações de parâmetro, na ordem mais provável
+    primeiro, e devolve (itens, chave_que_funcionou, respostas_tentadas)."""
+    candidatos = []
+    if registro.get("tradingName"):
+        candidatos.append({"tradingName": registro["tradingName"]})
+    if registro.get("issuingCompany"):
+        candidatos.append({"issuingCompany": registro["issuingCompany"]})
+    if registro.get("codeCVM"):
+        candidatos.append({"codeCVM": registro["codeCVM"]})
+    if registro.get("companyName"):
+        candidatos.append({"issuingCompany": registro["companyName"]})
+
+    tentativas = []
+    for extra in candidatos:
+        params_dict = {"language": "pt-br", "pageNumber": 1, "pageSize": 200}
+        params_dict.update(extra)
+        params = _codificar(params_dict)
+        try:
+            resp = requests.get(URL_CASH_DIVIDENDS.format(params=params), headers=HEADERS, timeout=30)
+            status = resp.status_code
+            corpo = resp.json() if status < 400 else {}
+            itens = corpo.get("results", []) if isinstance(corpo, dict) else []
+            tentativas.append(f"{list(extra.keys())[0]}={list(extra.values())[0]!r} -> HTTP{status}, {len(itens)} itens, chaves_resposta={list(corpo.keys()) if isinstance(corpo, dict) else '?'}")
+            if itens:
+                return itens, list(extra.keys())[0], tentativas
+        except Exception as e:
+            tentativas.append(f"{list(extra.keys())[0]} -> ERRO: {e}")
+    return [], None, tentativas
 
 
 def buscar_dividendos(trading_name):
+    """Mantido por compatibilidade (usa só tradingName, 1 tentativa)."""
     params = _codificar({
         "language": "pt-br", "pageNumber": 1, "pageSize": 200, "tradingName": trading_name,
     })
@@ -65,18 +103,19 @@ def buscar_dividendos(trading_name):
     return dados.get("results", [])
 
 
-def diagnosticar_formato(cur, ticker, itens):
-    """Grava no log, uma única vez por execução, as chaves e um exemplo
-    do primeiro provento retornado — ajuda a corrigir o parsing se a B3
-    mudar o formato da resposta (ou se os nomes de campo usados no
-    parsing estiverem errados)."""
-    if not itens:
-        return
-    primeiro = itens[0]
-    amostra = {k: primeiro.get(k) for k in list(primeiro.keys())[:12]}
+def diagnosticar_formato(cur, ticker, itens, extra_info=""):
+    """Grava no log um resumo do que foi tentado e (se algo veio) uma
+    amostra do primeiro provento — ajuda a corrigir o parsing sem precisar
+    de mais uma rodada de tentativa e erro."""
+    if itens:
+        primeiro = itens[0]
+        amostra = {k: primeiro.get(k) for k in list(primeiro.keys())[:12]}
+        mensagem = f"CHAVES DO 1º ITEM: {amostra}"
+    else:
+        mensagem = f"NENHUM ITEM RETORNADO. Tentativas: {extra_info}"
     cur.execute(
         "INSERT INTO log_execucao (etapa, ticker, status, mensagem) VALUES (%s,%s,%s,%s)",
-        ("dividendos_b3_diagnostico", ticker, "INFO", str(amostra)[:500]),
+        ("dividendos_b3_diagnostico", ticker, "INFO", mensagem[:500]),
     )
 
 
@@ -130,16 +169,16 @@ def main():
     for i, (ticker, nome) in enumerate(empresas, start=1):
         print(f"[{i}/{total}] Buscando dividendos de {ticker} - {nome}...")
         try:
-            trading_name = buscar_trading_name(ticker)
-            if not trading_name:
+            registro = buscar_registro_empresa(ticker)
+            if not registro:
                 raise ValueError("não foi possível identificar o código da empresa no site da B3")
-            itens = buscar_dividendos(trading_name)
-            if i == 1:  # loga o formato bruto só da primeira empresa, para não poluir o log
-                diagnosticar_formato(cur, ticker, itens)
+            itens, chave_usada, tentativas = _tentar_chaves_dividendos(registro)
+            if i <= 3:  # loga o diagnóstico das 3 primeiras empresas, para não poluir o log
+                diagnosticar_formato(cur, ticker, itens, extra_info="; ".join(tentativas))
             salvar_dividendos(cur, ticker, itens)
             cur.execute(
                 "INSERT INTO log_execucao (etapa, ticker, status, mensagem) VALUES (%s,%s,%s,%s)",
-                ("dividendos_b3", ticker, "OK", f"{len(itens)} registros"),
+                ("dividendos_b3", ticker, "OK", f"{len(itens)} registros (chave: {chave_usada})"),
             )
         except Exception as e:
             print(f"   -> ERRO em {ticker}: {e}")
