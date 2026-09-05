@@ -1,5 +1,9 @@
 """
-Roda UMA VEZ para criar as tabelas dentro do banco de dados.
+Cria/atualiza as tabelas do banco de dados. Seguro para rodar mais de uma
+vez (usa "IF NOT EXISTS" em tudo) — inclusive é chamado automaticamente
+a cada execução do workflow do GitHub Actions, para garantir que colunas
+novas adicionadas no projeto sejam aplicadas no banco sem passo manual.
+Localmente, rode manualmente pelo menos na primeira vez (Passo 1.6 do guia).
 Antes de rodar: crie o banco "ibovespa_db" (ou o nome que você
 escolheu em config.py) usando o pgAdmin4. Este script só cria
 as TABELAS dentro dele, não cria o banco em si.

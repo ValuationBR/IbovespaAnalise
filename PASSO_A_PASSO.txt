@@ -159,6 +159,11 @@ Acompanhe a execução (leva alguns minutos na primeira vez). Quando
 terminar, o link do site aparece em "Settings" > "Pages", algo como:
    https://seu-usuario.github.io/painel-ibovespa/
 
+Observação: o workflow já roda "criar_banco.py" sozinho a cada execução
+(é seguro, não apaga nada) — então, se no futuro eu adicionar uma coluna
+nova no projeto, você não precisa fazer nada manual no banco: é só subir
+os arquivos novos e rodar de novo.
+
 PASSO 2.7 — Pronto, roda sozinho
 --------------------------------
 O workflow já está configurado para rodar automaticamente todo dia
